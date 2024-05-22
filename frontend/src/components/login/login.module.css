@@ -26,6 +26,7 @@
   .loginBtnDiv {
     display: flex;
     justify-content: center;
+    margin-top: 1rem;
 
     .btn {
       background-color: var(--blue-btn);
