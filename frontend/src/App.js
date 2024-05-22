@@ -16,9 +16,20 @@ function App() {
 
   const DashboardLayout = () => {
     return (
-      <div>
-        <Sidebar />
-        <Outlet />
+      <div style={{ display: "flex" }}>
+        <div
+          style={{
+            flex: 1,
+            position: "fixed",
+            top: 0,
+            backgroundColor: "white",
+          }}
+        >
+          <Sidebar />
+        </div>
+        <div style={{ flex: 5, marginLeft: "13rem" }}>
+          <Outlet />
+        </div>
       </div>
     );
   };

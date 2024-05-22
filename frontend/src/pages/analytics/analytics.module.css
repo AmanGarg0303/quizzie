@@ -1,0 +1,11 @@
+.analytics {
+  background-color: rgb(226, 225, 225);
+  padding: 4rem;
+  min-height: 100vh;
+
+  .heading {
+    text-align: center;
+    font-size: 2rem;
+    color: blue;
+  }
+}

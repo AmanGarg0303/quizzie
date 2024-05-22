@@ -1,9 +1,10 @@
 import React from "react";
+import styles from "./analytics.module.css";
 
 const Analytics = () => {
   return (
-    <div>
-      <h2>Analytics page</h2>
+    <div className={styles.analytics}>
+      <h2 className={styles.heading}>Quiz Analysis</h2>
     </div>
   );
 };
