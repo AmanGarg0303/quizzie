@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./sidebar.module.css";
 import { Link, useLocation } from "react-router-dom";
+import { CreateQuiz } from "../createQuiz/CreateQuiz";
 
 export const Sidebar = () => {
   const { pathname } = useLocation();
+  const [openCreateQuizModal, setOpenCreateQuizModal] = useState(false);
 
   return (
     <div className={styles.sidebar}>
@@ -30,7 +32,18 @@ export const Sidebar = () => {
           </h5>
         </Link>
 
-        <h5 className={styles.contentTitle}>Create Quiz</h5>
+        <h5
+          className={styles.contentTitle}
+          onClick={() => setOpenCreateQuizModal(true)}
+        >
+          Create Quiz
+        </h5>
+        {openCreateQuizModal && (
+          <CreateQuiz
+            openCreateQuizModal={openCreateQuizModal}
+            setOpenCreateQuizModal={setOpenCreateQuizModal}
+          />
+        )}
       </div>
 
       <button className={styles.logout}>LOGOUT</button>
