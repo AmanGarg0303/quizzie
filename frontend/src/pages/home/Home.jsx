@@ -31,7 +31,11 @@ const Home = () => {
         </div>
 
         <div className={styles.m}>
-          {activeComponent === 0 ? <Register /> : <Login />}
+          {activeComponent === 0 ? (
+            <Register setActiveComponent={setActiveComponent} />
+          ) : (
+            <Login />
+          )}
         </div>
       </div>
     </div>
