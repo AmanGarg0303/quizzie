@@ -54,6 +54,33 @@ export const createQuiz = async (req, res, next) => {
   } catch (error) {}
 };
 
+// delete a quiz with its questions
+export const deleteQuiz = async (req, res, next) => {
+  try {
+    const user = req.user;
+    if (!user) return next(createError(404, "User not found!"));
+
+    const { quizId } = req.params;
+
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) return next(createError(404, "Quiz not found!"));
+
+    Promise.all(
+      quiz?.questions?.map(async (q) => {
+        console.log(q);
+
+        await Question.findByIdAndDelete(q);
+      })
+    ).then(async (res) => {
+      await Quiz.findByIdAndDelete(quizId);
+    });
+
+    res.status(200).json({ message: "Quiz deleted successfully!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 /*
 
 {
