@@ -59,3 +59,53 @@ export const getAllQuestionsOfAQuiz = async (req, res, next) => {
     next(error);
   }
 };
+
+// get dashboard information
+export const getDashboardInfo = async (req, res, next) => {
+  try {
+    const user = req.user;
+    if (!user) return next(createError(404, "User not found!"));
+
+    const totalQuizzesCreatedByUser = await Quiz.countDocuments({
+      userId: user._id,
+    });
+
+    const totalQuestionCreatedByUser = await Quiz.aggregate([
+      {
+        $match: {
+          userId: user._id,
+        },
+      },
+      {
+        $group: {
+          _id: "$questions",
+        },
+      },
+      {
+        $addFields: {
+          numberOfTags: {
+            $size: { $ifNull: ["$_id", []] },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          numberOfQuestions: {
+            $sum: "$numberOfTags",
+          },
+        },
+      },
+    ]);
+
+    console.log(totalQuestionCreatedByUser);
+
+    res.status(200).json({
+      totalQuizzesCreatedByUser,
+      totalQuestionCreatedByUser:
+        totalQuestionCreatedByUser[0].numberOfQuestions,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
