@@ -14,7 +14,7 @@ export const createQuiz = async (req, res, next) => {
 
     const qu = Promise.all(
       questions.map(async (q) => {
-        console.log("Single question: " + q.question);
+        // console.log("Single question: " + q.question);
 
         const ques = await Question.create({
           question: q.question,
