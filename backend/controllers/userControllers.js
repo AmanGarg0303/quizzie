@@ -98,7 +98,7 @@ export const getDashboardInfo = async (req, res, next) => {
       },
     ]);
 
-    console.log(totalQuestionCreatedByUser);
+    // console.log(totalQuestionCreatedByUser);
 
     res.status(200).json({
       totalQuizzesCreatedByUser,

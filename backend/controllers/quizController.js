@@ -28,7 +28,7 @@ export const createQuiz = async (req, res, next) => {
         return ques._id;
       })
     ).then(async (res) => {
-      console.log(res);
+      // console.log(res);
 
       const newQuiz = await Quiz.create({
         userId: user._id,
@@ -67,7 +67,7 @@ export const deleteQuiz = async (req, res, next) => {
 
     Promise.all(
       quiz?.questions?.map(async (q) => {
-        console.log(q);
+        // console.log(q);
 
         await Question.findByIdAndDelete(q);
       })
