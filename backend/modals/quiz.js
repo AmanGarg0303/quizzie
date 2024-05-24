@@ -6,9 +6,6 @@ const quizSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
     },
-    questions: {
-      type: [],
-    },
     quizName: {
       type: String,
       required: true,
@@ -25,9 +22,9 @@ const quizSchema = new mongoose.Schema(
       type: String,
       enum: ["text", "image", "textImage"],
     },
-    answerOption: {
-      type: Number,
-    },
+    // answerOption: {
+    //   type: Number,
+    // },
     questions: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "question",

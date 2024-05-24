@@ -24,8 +24,12 @@ const questionSchema = new mongoose.Schema(
         imageUrl: String,
       },
     ],
+    correctAnswer: {
+      type: Number,
+    },
     impressions: {
       type: Number,
+      default: 0,
     },
     optedPollOption1: {
       type: Number,
@@ -45,12 +49,15 @@ const questionSchema = new mongoose.Schema(
     },
     attempts: {
       type: Number,
+      default: 0,
     },
     answedCorrectly: {
       type: Number,
+      default: 0,
     },
     answerdIncorrectly: {
       type: Number,
+      default: 0,
     },
   },
   {
@@ -58,5 +65,5 @@ const questionSchema = new mongoose.Schema(
   }
 );
 
-const Question = mongoose.model("User", questionSchema);
+const Question = mongoose.model("Question", questionSchema);
 export default Question;
