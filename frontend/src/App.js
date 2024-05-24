@@ -4,8 +4,12 @@ import Home from "./pages/home/Home";
 import Dashboard from "./pages/dashboard/Dashboard";
 import { Sidebar } from "./components/sidebar/Sidebar";
 import Analytics from "./pages/analytics/Analytics";
+import { useSelector } from "react-redux";
+import PageNotFound from "./pages/pageNotFound/PageNotFound";
 
 function App() {
+  const { currentUser } = useSelector((state) => state.user);
+
   const HomeLayout = () => {
     return (
       <div className="App">
@@ -41,7 +45,27 @@ function App() {
       children: [
         {
           path: "/",
-          element: <Home />,
+          element: !currentUser ? (
+            <Home />
+          ) : (
+            <>
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    flex: 1,
+                    position: "fixed",
+                    top: 0,
+                    backgroundColor: "white",
+                  }}
+                >
+                  <Sidebar />
+                </div>
+                <div style={{ flex: 5, marginLeft: "13rem" }}>
+                  <Dashboard />
+                </div>
+              </div>
+            </>
+          ),
         },
       ],
     },
@@ -58,6 +82,10 @@ function App() {
           element: <Analytics />,
         },
       ],
+    },
+    {
+      path: "/*",
+      element: <PageNotFound />,
     },
   ]);
   return (

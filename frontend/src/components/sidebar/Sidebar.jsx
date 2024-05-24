@@ -1,11 +1,30 @@
 import React, { useState } from "react";
 import styles from "./sidebar.module.css";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CreateQuiz } from "../createQuiz/CreateQuiz";
+import { logout } from "../../redux/userSlice";
+import newRequest from "../../utils/newRequest";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 
 export const Sidebar = () => {
   const { pathname } = useLocation();
   const [openCreateQuizModal, setOpenCreateQuizModal] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutUser = async () => {
+    try {
+      const res = await newRequest.get(`auth/logout`);
+      dispatch(logout());
+      toast.success(res?.data?.message);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!");
+    }
+  };
 
   return (
     <div className={styles.sidebar}>
@@ -46,7 +65,9 @@ export const Sidebar = () => {
         )}
       </div>
 
-      <button className={styles.logout}>LOGOUT</button>
+      <button onClick={logoutUser} className={styles.logout}>
+        LOGOUT
+      </button>
     </div>
   );
 };

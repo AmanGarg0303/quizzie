@@ -43,8 +43,8 @@ export const Login = () => {
       });
 
       // console.log(res.data);
-      toast.success("Logged in successfully!");
       dispatch(loginSuccess(res.data));
+      toast.success("Logged in successfully!");
       navigate("/dashboard");
     } catch (error) {
       console.log(error);
@@ -63,11 +63,12 @@ export const Login = () => {
           <input
             type="email"
             id="email"
-            placeholder="email"
+            placeholder={error.emailErr ? error.emailErr : "email"}
             name="email"
             autoComplete="off"
             className={styles.inputField}
             onChange={(e) => setEmail(e.target.value)}
+            style={{ border: error.emailErr && "1px solid red" }}
           />
           <p className={styles.error}>{error.emailErr}</p>
         </div>
@@ -79,11 +80,12 @@ export const Login = () => {
           <input
             type="password"
             id="password"
-            placeholder="Password"
+            placeholder={error.passwordErr ? error.passwordErr : "password"}
             name="password"
             autoComplete="off"
             className={styles.inputField}
             onChange={(e) => setPassword(e.target.value)}
+            style={{ border: error.passwordErr && "1px solid red" }}
           />
           <p className={styles.error}>{error.passwordErr}</p>
         </div>
