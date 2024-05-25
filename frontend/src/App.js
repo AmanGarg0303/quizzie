@@ -7,6 +7,7 @@ import Analytics from "./pages/analytics/Analytics";
 import { useSelector } from "react-redux";
 import PageNotFound from "./pages/pageNotFound/PageNotFound";
 import QuestionWiseAnalysis from "./pages/questionWiseAnalysis/QuestionWiseAnalysis";
+import PlayQuiz from "./pages/playQuiz/PlayQuiz";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -67,6 +68,10 @@ function App() {
               </div>
             </>
           ),
+        },
+        {
+          path: "/playquiz/:quizId",
+          element: <PlayQuiz />,
         },
       ],
     },
