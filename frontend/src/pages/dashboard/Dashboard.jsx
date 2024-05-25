@@ -1,21 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./dashboard.module.css";
 import { QuizzesComp } from "../../components/quizzesComp/QuizzesComp";
+import newRequest from "../../utils/newRequest";
 
 const Dashboard = () => {
+  const [dashboardData, setDashboardData] = useState({});
+
+  useEffect(() => {
+    const fetchD = async () => {
+      const res = await newRequest.get("/user/dashboard");
+      setDashboardData(res?.data);
+    };
+
+    fetchD();
+  }, []);
+
   return (
     <div className={styles.dashboard}>
       <div className={styles.mainContent}>
         <div className={styles.singleContent} style={{ color: "orange" }}>
           <p className={styles.heading}>
-            <span>12 </span> Quiz
+            <span>{dashboardData.totalQuizzesCreatedByUser} </span> Quiz
           </p>
           <p className={styles.para}>Created</p>
         </div>
 
         <div className={styles.singleContent} style={{ color: "green" }}>
           <p className={styles.heading}>
-            <span>110 </span>questions
+            <span>{dashboardData?.totalQuestionCreatedByUser} </span>questions
           </p>
           <p className={styles.para}>Created</p>
         </div>
