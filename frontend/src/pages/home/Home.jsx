@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import styles from "./home.module.css";
 import { Register } from "../../components/register/Register";
 import { Login } from "../../components/login/Login";
+import { useActiveAuthComp } from "../../providers/activeAuthComp";
 
 const Home = () => {
-  const [activeComponent, setActiveComponent] = useState(0); // 0=signup, 1=login
+  // 0=signup, 1=login
+  const { activeAuthComp, setActiveAuthComp } = useActiveAuthComp();
 
   return (
     <div className={styles.container}>
@@ -13,17 +15,17 @@ const Home = () => {
 
         <div className={styles.activeComp}>
           <button
-            onClick={() => setActiveComponent(0)}
+            onClick={() => setActiveAuthComp(0)}
             className={`${styles.register} ${
-              activeComponent === 0 && styles.activeState
+              JSON.parse(activeAuthComp) === 0 && styles.activeState
             }`}
           >
             Signup
           </button>
           <button
-            onClick={() => setActiveComponent(1)}
+            onClick={() => setActiveAuthComp(1)}
             className={`${styles.login} ${
-              activeComponent === 1 && styles.activeState
+              JSON.parse(activeAuthComp) === 1 && styles.activeState
             }`}
           >
             Login
@@ -31,8 +33,8 @@ const Home = () => {
         </div>
 
         <div className={styles.m}>
-          {activeComponent === 0 ? (
-            <Register setActiveComponent={setActiveComponent} />
+          {JSON.parse(activeAuthComp) === 0 ? (
+            <Register setActiveAuthComp={setActiveAuthComp} />
           ) : (
             <Login />
           )}

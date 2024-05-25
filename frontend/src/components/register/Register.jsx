@@ -3,7 +3,7 @@ import styles from "./register.module.css";
 import newRequest from "../../utils/newRequest";
 import toast from "react-hot-toast";
 
-export const Register = ({ setActiveComponent }) => {
+export const Register = ({ setActiveAuthComp }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,7 +55,7 @@ export const Register = ({ setActiveComponent }) => {
 
       // console.log(res.data);
       toast.success(res.data.message);
-      setActiveComponent(1);
+      setActiveAuthComp(1);
     } catch (error) {
       // console.log(error);
       setErrorResponse(error?.response?.data?.message);

@@ -9,6 +9,7 @@ import { store, persistor } from "./redux/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { Toaster } from "react-hot-toast";
+import { ActiveAuthCompProvider } from "./providers/activeAuthComp";
 
 const theme = createTheme({
   fontFamily: "Roboto, sans-serif",
@@ -18,10 +19,12 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <MantineProvider theme={theme}>
-        <App />
-      </MantineProvider>
-      <Toaster />
+      <ActiveAuthCompProvider>
+        <MantineProvider theme={theme}>
+          <App />
+        </MantineProvider>
+        <Toaster />
+      </ActiveAuthCompProvider>
     </PersistGate>
   </Provider>
 );

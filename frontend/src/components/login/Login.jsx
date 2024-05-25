@@ -26,6 +26,8 @@ export const Login = () => {
     const error = {};
     setError(error);
 
+    setErrorResponse("");
+
     if (!email) {
       error.emailErr = "Email is required!";
     }
@@ -47,11 +49,13 @@ export const Login = () => {
       toast.success("Logged in successfully!");
       navigate("/dashboard");
     } catch (error) {
-      console.log(error);
-      dispatch(loginFailure());
+      // console.log(error);
       setErrorResponse(error?.response?.data?.message);
+      // dispatch(loginFailure());
     }
   };
+
+  console.log(errorResponse);
 
   return (
     <div className={styles.container}>

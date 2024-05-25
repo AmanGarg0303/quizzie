@@ -2,17 +2,25 @@ import React, { useEffect, useState } from "react";
 import styles from "./dashboard.module.css";
 import { QuizzesComp } from "../../components/quizzesComp/QuizzesComp";
 import newRequest from "../../utils/newRequest";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({});
 
+  const { currentUser } = useSelector((state) => state.user);
+
   useEffect(() => {
     const fetchD = async () => {
-      const res = await newRequest.get("/user/dashboard");
-      setDashboardData(res?.data);
+      try {
+        const res = await newRequest.get("/user/dashboard");
+        setDashboardData(res?.data);
+      } catch (error) {
+        console.log(error);
+      }
     };
-
-    fetchD();
+    if (currentUser) {
+      fetchD();
+    }
   }, []);
 
   return (

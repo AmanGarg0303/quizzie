@@ -3,6 +3,7 @@ import styles from "./analytics.module.css";
 import newRequest from "../../utils/newRequest";
 import formatDate from "../../utils/formatDate";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const EditSVG = (
   <svg
@@ -68,13 +69,21 @@ const shareSVG = (
 const Analytics = () => {
   const [analyticsData, setAnalyticsData] = useState([]);
 
+  const { currentUser } = useSelector((state) => state.user);
+
   useEffect(() => {
     const fetchD = async () => {
-      const res = await newRequest.get(`user/analytics`);
-      setAnalyticsData(res.data);
+      try {
+        const res = await newRequest.get(`user/analytics`);
+        setAnalyticsData(res.data);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    fetchD();
+    if (currentUser) {
+      fetchD();
+    }
   }, []);
 
   const handleShareQuiz = (quizId) => {
