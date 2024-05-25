@@ -81,6 +81,24 @@ export const deleteQuiz = async (req, res, next) => {
   }
 };
 
+export const IncreaseImpressionOnQuiz = async (req, res, next) => {
+  try {
+    const { quizId } = req.params;
+
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) return res.status(404).json({ message: "Quiz not found!" });
+
+    await quiz.updateOne({
+      $inc: {
+        impressions: 1,
+      },
+    });
+    res.status(200).json({ message: "Impression increased" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 /*
 
 {

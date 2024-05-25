@@ -20,6 +20,14 @@ const PlayQuiz = () => {
     fetchD();
   }, [quizId]);
 
+  useEffect(() => {
+    const fetchD = async () => {
+      await newRequest.put(`quiz/${quizId}`);
+    };
+
+    fetchD();
+  }, [quizId]);
+
   return (
     <div className={styles.container}>
       <div className={styles.miniContainer}>

@@ -42,7 +42,7 @@ const Dashboard = () => {
 
         <div className={styles.singleContent} style={{ color: "blue" }}>
           <p className={styles.heading}>
-            <span>1.4K </span> total
+            <span>{dashboardData.totalImpressions} </span> total
           </p>
           <p className={styles.para}>impressions</p>
         </div>

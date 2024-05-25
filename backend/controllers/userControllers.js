@@ -114,13 +114,30 @@ export const getDashboardInfo = async (req, res, next) => {
       },
     ]);
 
-    // console.log(totalQuestionCreatedByUser);
+    const totalImpressionsOfAUser = await Quiz.aggregate([
+      {
+        $match: {
+          userId: user._id,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          impressionSum: {
+            $sum: "$impressions",
+          },
+        },
+      },
+    ]);
 
     res.status(200).json({
       totalQuizzesCreatedByUser,
       totalQuestionCreatedByUser: totalQuestionCreatedByUser[0]
         ?.numberOfQuestions
         ? totalQuestionCreatedByUser[0].numberOfQuestions
+        : 0,
+      totalImpressions: totalImpressionsOfAUser[0]?.impressionSum
+        ? totalImpressionsOfAUser[0].impressionSum
         : 0,
     });
   } catch (error) {
