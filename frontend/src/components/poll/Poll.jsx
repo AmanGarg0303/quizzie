@@ -281,6 +281,8 @@ export const Poll = ({
   openCreateQuizModal,
   setOpenCreateQuizModal,
   setShowComponent,
+  quizName,
+  quizType,
 }) => {
   const [activeSlideIdx, setActiveSlideIdx] = useState(1);
   const [slideCount, setSlideCount] = useState(1);

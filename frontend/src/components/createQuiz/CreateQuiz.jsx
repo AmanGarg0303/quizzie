@@ -3,6 +3,7 @@ import { Modal } from "@mantine/core";
 import styles from "./createQuiz.module.css";
 import { QA } from "../QA/QA";
 import { Poll } from "../poll/Poll";
+import toast from "react-hot-toast";
 
 export const CreateQuiz = ({ openCreateQuizModal, setOpenCreateQuizModal }) => {
   // 0 means Q&A, 1 means Poll
@@ -10,6 +11,20 @@ export const CreateQuiz = ({ openCreateQuizModal, setOpenCreateQuizModal }) => {
 
   // 0 means Quiz1, 1 means QA/Poll, 2 means quizCreated
   const [showComponent, setShowComponent] = useState(0);
+
+  const [quizName, setQuizName] = useState("");
+  const [quizId, setQuizId] = useState("");
+
+  const [err, seterr] = useState("");
+  const handleContinueToQuiz1 = (e) => {
+    seterr("");
+
+    if (!quizName) {
+      seterr("Quiz Name is required!");
+      return;
+    }
+    setShowComponent(1);
+  };
 
   return (
     <Modal
@@ -26,6 +41,9 @@ export const CreateQuiz = ({ openCreateQuizModal, setOpenCreateQuizModal }) => {
           setQuizType={setQuizType}
           setOpenCreateQuizModal={setOpenCreateQuizModal}
           setShowComponent={setShowComponent}
+          setQuizName={setQuizName}
+          handleContinueToQuiz1={handleContinueToQuiz1}
+          err={err}
         />
       )}
 
@@ -35,16 +53,23 @@ export const CreateQuiz = ({ openCreateQuizModal, setOpenCreateQuizModal }) => {
             openCreateQuizModal={openCreateQuizModal}
             setOpenCreateQuizModal={setOpenCreateQuizModal}
             setShowComponent={setShowComponent}
+            quizName={quizName}
+            quizType="QA"
+            setQuizId={setQuizId}
           />
         ) : (
           <Poll
             openCreateQuizModal={openCreateQuizModal}
             setOpenCreateQuizModal={setOpenCreateQuizModal}
             setShowComponent={setShowComponent}
+            quizName={quizName}
+            quizType="POLL"
           />
         ))}
 
-      {showComponent === 2 && <QuizCreated quizType={quizType} />}
+      {showComponent === 2 && (
+        <QuizCreated quizType={quizType} quizId={quizId} />
+      )}
     </Modal>
   );
 };
@@ -54,17 +79,22 @@ const Quiz1 = ({
   setQuizType,
   setOpenCreateQuizModal,
   setShowComponent,
+  setQuizName,
+  handleContinueToQuiz1,
+  err,
 }) => {
   return (
     <div className={styles.modal}>
       <input
         type="text"
-        placeholder="Quiz Name"
+        placeholder={err ? err : "Quiz Name"}
         className={styles.quizNameInput}
+        onChange={(e) => setQuizName(e.target.value)}
+        style={{ border: err ? "1px solid red" : "1px solid transparent" }}
       />
 
       <div className={styles.content}>
-        <label htmlFor=""> Quiz Type </label>
+        <label htmlFor="quizType">Quiz Type </label>
         <button
           onClick={() => setQuizType(0)}
           className={`${styles.optionToSelect} ${
@@ -90,10 +120,7 @@ const Quiz1 = ({
         >
           Cancel
         </button>
-        <button
-          onClick={() => setShowComponent(1)}
-          className={styles.continueBtn}
-        >
+        <button onClick={handleContinueToQuiz1} className={styles.continueBtn}>
           Continue
         </button>
       </div>
@@ -101,7 +128,13 @@ const Quiz1 = ({
   );
 };
 
-const QuizCreated = ({ quizType }) => {
+const QuizCreated = ({ quizType, quizId }) => {
+  const shareQuiz = () => {
+    navigator.clipboard.writeText(`http://localhost:3000/playquiz/${quizId}`);
+
+    toast.success("Link copied to clipboard");
+  };
+
   return (
     <div className={styles.modal}>
       <div style={{ textAlign: "center", fontSize: "2rem", fontWeight: "600" }}>
@@ -113,10 +146,13 @@ const QuizCreated = ({ quizType }) => {
         type="text"
         placeholder={`Your ${quizType === 0 ? "quiz" : "poll"} link is here`}
         className={styles.quizNameInput}
+        value={`http://localhost:3000/playQuiz/${quizId}`}
       />
 
       <div className={styles.shareBtnDiv}>
-        <button className={styles.shareBtn}>Share</button>
+        <button className={styles.shareBtn} onClick={shareQuiz}>
+          Share
+        </button>
       </div>
     </div>
   );
