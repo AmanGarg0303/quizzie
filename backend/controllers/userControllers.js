@@ -102,8 +102,10 @@ export const getDashboardInfo = async (req, res, next) => {
 
     res.status(200).json({
       totalQuizzesCreatedByUser,
-      totalQuestionCreatedByUser:
-        totalQuestionCreatedByUser[0].numberOfQuestions,
+      totalQuestionCreatedByUser: totalQuestionCreatedByUser[0]
+        ?.numberOfQuestions
+        ? totalQuestionCreatedByUser[0].numberOfQuestions
+        : 0,
     });
   } catch (error) {
     next(error);

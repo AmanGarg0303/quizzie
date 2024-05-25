@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./analytics.module.css";
+import newRequest from "../../utils/newRequest";
+import formatDate from "../../utils/formatDate";
+import toast from "react-hot-toast";
 
 const EditSVG = (
   <svg
@@ -63,6 +66,27 @@ const shareSVG = (
 );
 
 const Analytics = () => {
+  const [analyticsData, setAnalyticsData] = useState([]);
+
+  useEffect(() => {
+    const fetchD = async () => {
+      const res = await newRequest.get(`user/analytics`);
+      setAnalyticsData(res.data);
+    };
+
+    fetchD();
+  }, []);
+
+  const handleShareQuiz = (quizId) => {
+    navigator.clipboard.writeText(`http://localhost:3000/playquiz/${quizId}`);
+
+    toast.success("Link copied to clipboard");
+  };
+
+  const handleDeleteQuiz = async () => {};
+
+  // console.log(analyticsData);
+
   return (
     <div className={styles.analytics}>
       <h2 className={styles.heading}>Quiz Analysis</h2>
@@ -79,76 +103,43 @@ const Analytics = () => {
               <th className={styles.headTH}></th>
             </tr>
           </thead>
+
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Quiz 1</td>
-              <td>14 Sep, 2024</td>
-              <td>456</td>
-              <td className={styles.actions}>
-                <span className={styles.icon}>{EditSVG}</span>
-                <span className={styles.icon}>{deleteSVG}</span>
-                <span className={styles.icon}>{shareSVG}</span>
-              </td>
-              <td>
-                <span className={styles.questionWise}>
-                  Question Wise Analysis
-                </span>
-              </td>
-            </tr>
-
-            <tr>
-              <td>2</td>
-              <td>Quiz 2</td>
-              <td>14 Sep, 2024</td>
-              <td>456</td>
-              <td className={styles.actions}>
-                <span className={styles.icon}>{EditSVG}</span>
-                <span className={styles.icon}>{deleteSVG}</span>
-                <span className={styles.icon}>{shareSVG}</span>
-              </td>
-              <td>
-                <span className={styles.questionWise}>
-                  Question Wise Analysis
-                </span>
-              </td>
-            </tr>
-
-            <tr>
-              <td>3</td>
-              <td>Quiz 3</td>
-              <td>14 Sep, 2024</td>
-              <td>456</td>
-              <td className={styles.actions}>
-                <span className={styles.icon}>{EditSVG}</span>
-                <span className={styles.icon}>{deleteSVG}</span>
-                <span className={styles.icon}>{shareSVG}</span>
-              </td>
-              <td>
-                <span className={styles.questionWise}>
-                  Question Wise Analysis
-                </span>
-              </td>
-            </tr>
-
-            <tr>
-              <td>4</td>
-              <td>Quiz 4</td>
-              <td>14 Sep, 2024</td>
-              <td>456</td>
-              <td className={styles.actions}>
-                <span className={styles.icon}>{EditSVG}</span>
-                <span className={styles.icon}>{deleteSVG}</span>
-                <span className={styles.icon}>{shareSVG}</span>
-              </td>
-              <td>
-                <span className={styles.questionWise}>
-                  Question Wise Analysis
-                </span>
-              </td>
-            </tr>
+            {analyticsData?.map((analytic, i) => (
+              <tr key={analytic._id}>
+                <td>{i + 1}</td>
+                <td>{analytic?.quizName}</td>
+                <td>{formatDate(analytic.createdAt)}</td>
+                <td>{analytic.impressions}</td>
+                <td className={styles.actions}>
+                  <span title="edit" className={styles.icon}>
+                    {EditSVG}
+                  </span>
+                  <span title="delete" className={styles.icon}>
+                    {deleteSVG}
+                  </span>
+                  <span
+                    className={styles.icon}
+                    title="share"
+                    onClick={() => handleShareQuiz(analytic._id)}
+                  >
+                    {shareSVG}
+                  </span>
+                </td>
+                <td>
+                  <span className={styles.questionWise}>
+                    Question Wise Analysis
+                  </span>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
+        {analyticsData.length === 0 && (
+          <div style={{ textAlign: "center", marginTop: "2rem" }}>
+            No data to show!
+          </div>
+        )}
       </div>
     </div>
   );
