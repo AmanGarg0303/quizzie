@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styles from "./poll.module.css";
 import { Modal } from "@mantine/core";
+import newRequest from "../../utils/newRequest";
+import toast from "react-hot-toast";
 
 const deleteSVG = (
   <svg
@@ -186,17 +188,17 @@ const Form = ({
                 handleAnswerChange(activeSlideIdx, i + 1);
               }}
               checked={
-                postData.slides[activeSlideIdx - 1].answerOption === i + 1
+                postData.slides[activeSlideIdx - 1].correctAnswer === i + 1
               }
             /> */}
             <input
               style={{
                 marginLeft: "2rem",
                 backgroundColor:
-                  postData.slides[activeSlideIdx - 1].answerOption === i + 1 &&
+                  postData.slides[activeSlideIdx - 1].correctAnswer === i + 1 &&
                   "green",
                 color:
-                  postData.slides[activeSlideIdx - 1].answerOption === i + 1 &&
+                  postData.slides[activeSlideIdx - 1].correctAnswer === i + 1 &&
                   "white",
               }}
               type="text"
@@ -211,10 +213,10 @@ const Form = ({
               <input
                 style={{
                   backgroundColor:
-                    postData.slides[activeSlideIdx - 1].answerOption ===
+                    postData.slides[activeSlideIdx - 1].correctAnswer ===
                       i + 1 && "green",
                   color:
-                    postData.slides[activeSlideIdx - 1].answerOption ===
+                    postData.slides[activeSlideIdx - 1].correctAnswer ===
                       i + 1 && "white",
                 }}
                 type="text"
@@ -247,7 +249,7 @@ const Form = ({
             onChange={(e) => {
               handleAnswerChange(activeSlideIdx, 1);
             }}
-            checked={postData.slides[activeSlideIdx - 1].answerOption === 1}
+            checked={postData.slides[activeSlideIdx - 1].correctAnswer === 1}
           />
           <input
             type="text"
@@ -283,6 +285,7 @@ export const Poll = ({
   setShowComponent,
   quizName,
   quizType,
+  setQuizId,
 }) => {
   const [activeSlideIdx, setActiveSlideIdx] = useState(1);
   const [slideCount, setSlideCount] = useState(1);
@@ -294,6 +297,7 @@ export const Poll = ({
         question: "",
         optionType: optionType,
         timer: 0,
+        quizType: "POLL",
         options:
           optionType === "textImage"
             ? [
@@ -301,7 +305,7 @@ export const Poll = ({
                 { text: "", imageUrl: "" },
               ]
             : [{ text: "" }, { text: "" }],
-        answerOption: 1,
+        correctAnswer: 1,
       },
     ],
   });
@@ -316,6 +320,7 @@ export const Poll = ({
       question: "",
       optionType: newPostData.slides[0].optionType,
       timer: 0,
+      quizType: "POLL",
       options:
         optionType === "textImage"
           ? [
@@ -323,7 +328,7 @@ export const Poll = ({
               { text: "", imageUrl: "" },
             ]
           : [{ text: "" }, { text: "" }],
-      answerOption: 1,
+      correctAnswer: 1,
     });
     setPostData(newPostData);
     if (slideCount >= 1) {
@@ -350,10 +355,10 @@ export const Poll = ({
     const newPostData = { ...postData };
     newPostData.slides[activeSlideIdx - 1].options.splice(optionIdx, 1);
     if (
-      newPostData.slides[activeSlideIdx - 1].answerOption >
+      newPostData.slides[activeSlideIdx - 1].correctAnswer >
       newPostData.slides[activeSlideIdx - 1].options.length
     ) {
-      newPostData.slides[activeSlideIdx - 1].answerOption = 1;
+      newPostData.slides[activeSlideIdx - 1].correctAnswer = 1;
     }
     setPostData(newPostData);
   };
@@ -382,7 +387,7 @@ export const Poll = ({
 
   const handleAnswerChange = (index, value) => {
     const newPostData = { ...postData };
-    newPostData.slides[index - 1].answerOption = value;
+    newPostData.slides[index - 1].correctAnswer = value;
     setPostData(newPostData);
   };
 
@@ -456,6 +461,63 @@ export const Poll = ({
   // console.log("OptionType: " + optionType);
   // console.log(postData);
 
+  const [inProcess, setInProcess] = useState(false);
+
+  const handleCreatePoll = async (e) => {
+    const error = postData.slides.some(
+      (slide) =>
+        slide.correctAnswer === "" ||
+        slide.optionType === "" ||
+        slide.question === "" ||
+        slide.quizType === "" ||
+        slide.timer === "" ||
+        slide.options.some((o) => o.text === "" || o.imageUrl === "")
+    );
+
+    if (slideCount < 1) {
+      setShowError(true);
+      setErrorMessage("You need to have atleast 1 question.");
+      return;
+    }
+
+    if (error) {
+      setShowError(true);
+      setErrorMessage("Please fill all the fields.");
+      return;
+    }
+
+    setShowError(false);
+    setErrorMessage("");
+
+    setInProcess(true);
+    try {
+      const dataToSend = {
+        quizName: quizName,
+        timer: 0,
+        quizType: "POLL",
+        optionType: optionType,
+        questions: postData.slides,
+      };
+
+      // console.log(dataToSend);
+
+      const res = await newRequest.post(`quiz/`, dataToSend);
+      // console.log(res.data);
+      setQuizId(res?.data?.quizId);
+
+      toast.success("Poll created successfully!");
+      setShowComponent(2);
+    } catch (error) {
+      setShowError(true);
+      console.log(error);
+      setErrorMessage("Something went wrong!");
+    } finally {
+      setInProcess(false);
+    }
+
+    // console.log(postData);
+  };
+
   return (
     <Modal
       opened={openCreateQuizModal}
@@ -499,7 +561,8 @@ export const Poll = ({
           Cancel
         </button>
         <button
-          onClick={() => setShowComponent(2)}
+          disabled={inProcess}
+          onClick={handleCreatePoll}
           className={styles.createQuizBtn}
         >
           Create Poll

@@ -596,7 +596,7 @@ export const QA = ({
 
       const res = await newRequest.post(`quiz/`, dataToSend);
       // console.log(res.data);
-      setQuizId(res.quizId);
+      setQuizId(res?.data?.quizId);
 
       toast.success(res?.data?.message);
       setShowComponent(2);

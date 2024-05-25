@@ -64,6 +64,7 @@ export const CreateQuiz = ({ openCreateQuizModal, setOpenCreateQuizModal }) => {
             setShowComponent={setShowComponent}
             quizName={quizName}
             quizType="POLL"
+            setQuizId={setQuizId}
           />
         ))}
 
@@ -146,6 +147,7 @@ const QuizCreated = ({ quizType, quizId }) => {
         type="text"
         placeholder={`Your ${quizType === 0 ? "quiz" : "poll"} link is here`}
         className={styles.quizNameInput}
+        readOnly
         value={`http://localhost:3000/playQuiz/${quizId}`}
       />
 
