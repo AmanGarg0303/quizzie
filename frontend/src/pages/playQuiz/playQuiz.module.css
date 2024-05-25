@@ -9,7 +9,7 @@
 
   .miniContainer {
     width: 80%;
-    height: 80%;
+    height: 85%;
     background-color: white;
     border-radius: 12px;
     display: flex;
@@ -38,4 +38,71 @@
       }
     }
   }
+}
+
+.startQuizArea {
+  padding: 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  .topArea {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .questionText {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  .options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+
+    .optionBox {
+      font-size: 2rem;
+      font-weight: 600;
+      text-align: center;
+      border-radius: 8px;
+      padding: 0.5rem;
+      background-color: rgb(226, 225, 225);
+      cursor: pointer;
+      border: 2px solid transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .nextBtnDiv {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+
+    .nextBtn {
+      all: unset;
+      width: 40%;
+      text-align: center;
+      padding: 1rem 4rem;
+      font-size: 1.4rem;
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 3px 8px;
+      border-radius: 8px;
+      background-color: green;
+      color: white;
+      cursor: pointer;
+      &:hover {
+        filter: brightness(1.1);
+      }
+    }
+  }
+}
+
+.quizComplete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
 }
