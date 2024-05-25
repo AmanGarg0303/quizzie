@@ -194,12 +194,6 @@ const Form = ({
             <input
               style={{
                 marginLeft: "2rem",
-                backgroundColor:
-                  postData.slides[activeSlideIdx - 1].correctAnswer === i + 1 &&
-                  "green",
-                color:
-                  postData.slides[activeSlideIdx - 1].correctAnswer === i + 1 &&
-                  "white",
               }}
               type="text"
               placeholder={optionType === "image" ? "imageUrl" : "text"}
@@ -211,14 +205,6 @@ const Form = ({
             />
             {optionType === "textImage" && (
               <input
-                style={{
-                  backgroundColor:
-                    postData.slides[activeSlideIdx - 1].correctAnswer ===
-                      i + 1 && "green",
-                  color:
-                    postData.slides[activeSlideIdx - 1].correctAnswer ===
-                      i + 1 && "white",
-                }}
                 type="text"
                 placeholder="imageUrl"
                 className={styles.answerInput}

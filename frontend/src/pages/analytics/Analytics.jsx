@@ -5,6 +5,7 @@ import formatDate from "../../utils/formatDate";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { DeleteQuizModal } from "../../components/deleteQuizModal/DeleteQuizModal";
 
 const EditSVG = (
   <svg
@@ -93,9 +94,19 @@ const Analytics = () => {
     toast.success("Link copied to clipboard");
   };
 
-  const handleDeleteQuiz = async () => {};
+  const [openDeleteQuizModal, setOpenDeleteQuizModal] = useState(false);
+  const [quId, setQuId] = useState("");
 
-  // console.log(analyticsData);
+  const handleDeleteQuiz = async (quizId) => {
+    try {
+      console.log({ quizId });
+      // const res = await newRequest.delete(`quiz/${quizId}`);
+      // toast.success(res?.data?.message);
+      setOpenDeleteQuizModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={styles.analytics}>
@@ -125,9 +136,23 @@ const Analytics = () => {
                   <span title="edit" className={styles.icon}>
                     {EditSVG}
                   </span>
-                  <span title="delete" className={styles.icon}>
+                  <span
+                    title="delete"
+                    className={styles.icon}
+                    onClick={() => {
+                      setOpenDeleteQuizModal(true);
+                      setQuId(analytic._id);
+                    }}
+                  >
                     {deleteSVG}
                   </span>
+
+                  <DeleteQuizModal
+                    openDeleteQuizModal={openDeleteQuizModal}
+                    setOpenDeleteQuizModal={setOpenDeleteQuizModal}
+                    quId={quId}
+                  />
+
                   <span
                     className={styles.icon}
                     title="share"
