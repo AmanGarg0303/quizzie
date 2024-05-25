@@ -6,12 +6,16 @@ import {
   getAllQuestionsOfAQuiz,
   getDashboardInfo,
   getSingleQuestion,
+  getSingleQuiz,
 } from "../controllers/userControllers.js";
 
 router.get("/analytics", protect, getAllMyQuizzes);
 
 // get a single quiz
 router.get("/analytics/:questionId", protect, getSingleQuestion);
+
+// get a single quiz
+router.get("/analytics/q/:quizId", protect, getSingleQuiz);
 
 // get all question from a single quiz (for question wise analysis)
 router.get("/analytics/questionWise/:quizId", protect, getAllQuestionsOfAQuiz);

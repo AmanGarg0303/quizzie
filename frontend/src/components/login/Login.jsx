@@ -38,7 +38,7 @@ export const Login = () => {
     }
 
     try {
-      dispatch(loginStart());
+      // dispatch(loginStart());
       const res = await newRequest.post("auth/login", {
         email,
         password,

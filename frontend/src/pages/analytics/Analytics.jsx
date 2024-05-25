@@ -4,6 +4,7 @@ import newRequest from "../../utils/newRequest";
 import formatDate from "../../utils/formatDate";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const EditSVG = (
   <svg
@@ -136,9 +137,14 @@ const Analytics = () => {
                   </span>
                 </td>
                 <td>
-                  <span className={styles.questionWise}>
-                    Question Wise Analysis
-                  </span>
+                  <Link
+                    to={`/dashboard/analytics/questionWise/${analytic._id}`}
+                    className={styles.link}
+                  >
+                    <span className={styles.questionWise}>
+                      Question Wise Analysis
+                    </span>
+                  </Link>
                 </td>
               </tr>
             ))}

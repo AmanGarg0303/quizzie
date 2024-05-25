@@ -6,6 +6,7 @@ import { Sidebar } from "./components/sidebar/Sidebar";
 import Analytics from "./pages/analytics/Analytics";
 import { useSelector } from "react-redux";
 import PageNotFound from "./pages/pageNotFound/PageNotFound";
+import QuestionWiseAnalysis from "./pages/questionWiseAnalysis/QuestionWiseAnalysis";
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
@@ -80,6 +81,10 @@ function App() {
         {
           path: "/dashboard/analytics",
           element: <Analytics />,
+        },
+        {
+          path: "/dashboard/analytics/questionwise/:quizId",
+          element: <QuestionWiseAnalysis />,
         },
       ],
     },

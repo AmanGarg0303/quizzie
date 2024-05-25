@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./home.module.css";
 import { Register } from "../../components/register/Register";
 import { Login } from "../../components/login/Login";

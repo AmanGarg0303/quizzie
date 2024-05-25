@@ -36,6 +36,22 @@ export const getSingleQuestion = async (req, res, next) => {
   }
 };
 
+// get a single quiz
+export const getSingleQuiz = async (req, res, next) => {
+  try {
+    const { quizId } = req.params;
+
+    const q = await Quiz.findById(quizId);
+    if (!q) {
+      return next(createError(404, "Quiz not found"));
+    }
+
+    res.status(200).json(q);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // get all question of a quiz for question wise analysis
 export const getAllQuestionsOfAQuiz = async (req, res, next) => {
   try {
