@@ -105,7 +105,8 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions }) => {
     setCurrQuestion(currQuestion + 1);
     setTime(quizData?.timer);
   };
-  console.log(currQuestion, totalQuestionInQuiz);
+  // console.log(currQuestion, totalQuestionInQuiz);
+
   // timer management
   useEffect(() => {
     const timerId = setInterval(() => {

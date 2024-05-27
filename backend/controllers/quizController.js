@@ -99,6 +99,38 @@ export const IncreaseImpressionOnQuiz = async (req, res, next) => {
   }
 };
 
+export const TrendingQuizzes = async (req, res, next) => {
+  try {
+    const user = req.user;
+    if (!user) return next(createError(404, "User not found!"));
+
+    const trending = await Quiz.aggregate([
+      {
+        $match: {
+          userId: user._id,
+        },
+      },
+      {
+        $project: {
+          quizName: "$quizName",
+          createdAt: "$createdAt",
+          impressions: "$impressions",
+        },
+      },
+
+      {
+        $sort: {
+          impressions: -1,
+        },
+      },
+    ]);
+
+    res.status(200).json(trending);
+  } catch (error) {
+    next(error);
+  }
+};
+
 /*
 
 {

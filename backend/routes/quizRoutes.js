@@ -1,6 +1,7 @@
 import express from "express";
 import {
   IncreaseImpressionOnQuiz,
+  TrendingQuizzes,
   createQuiz,
   deleteQuiz,
 } from "../controllers/quizController.js";
@@ -15,5 +16,11 @@ router.delete("/:quizId", protect, deleteQuiz);
 
 // increase impression on quiz
 router.put("/:quizId", IncreaseImpressionOnQuiz);
+
+// increase impression on quiz
+router.put("/:quizId", IncreaseImpressionOnQuiz);
+
+// increase impression on quiz
+router.get("/trending", protect, TrendingQuizzes);
 
 export default router;
