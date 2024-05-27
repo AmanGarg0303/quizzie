@@ -8,6 +8,7 @@ const PlayQuiz = () => {
   const { quizId } = useParams();
   const [quizData, setQuizData] = useState("");
 
+  // this fetches quiz data
   useEffect(() => {
     const fetchD = async () => {
       try {
@@ -21,6 +22,7 @@ const PlayQuiz = () => {
     fetchD();
   }, [quizId]);
 
+  // this will update impressions data of a quiz
   useEffect(() => {
     const fetchD = async () => {
       try {
@@ -33,6 +35,7 @@ const PlayQuiz = () => {
     fetchD();
   }, [quizId]);
 
+  // this fetches quiz questions
   const [quizQuestions, setQuizQuestions] = useState([]);
   useEffect(() => {
     const fetchD = async () => {
@@ -49,6 +52,9 @@ const PlayQuiz = () => {
   }, [quizId]);
 
   const [showComp, setShowComp] = useState(0);
+
+  // console.log(quizData);
+  // console.log(quizQuestions);
 
   return (
     <div className={styles.container}>
@@ -86,19 +92,69 @@ const PlayQuiz = () => {
 };
 
 const StartQuiz = ({ setShowComp, quizData, quizQuestions }) => {
+  const totalQuestionInQuiz = quizQuestions?.length - 1;
+  const [currQuestion, setCurrQuestion] = useState(0);
+  const [time, setTime] = useState(quizData?.timer);
+
+  const handleNextQuestion = () => {
+    if (currQuestion === totalQuestionInQuiz) {
+      // TODO: submit the quiz and make changes in backend
+      // setShowComp(2);
+      return;
+    }
+    setCurrQuestion(currQuestion + 1);
+    setTime(quizData?.timer);
+  };
+  console.log(currQuestion, totalQuestionInQuiz);
+  // timer management
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      if (time > 0) {
+        setTime(time - 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(timerId);
+  }, [time, currQuestion]);
+
+  // console.log(time);
+
+  // going to next question automatically, when time ends
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      if (currQuestion === totalQuestionInQuiz) {
+        // TODO: submit the quiz and make changes in backend
+        // setShowComp(2);
+        return;
+      }
+      if (quizData?.timer > 0) {
+        setCurrQuestion(currQuestion + 1);
+      }
+      setTime(quizData?.timer);
+    }, quizData?.timer * 1000);
+
+    return () => clearInterval(timerId);
+  }, [currQuestion, quizData?.timer]);
+
   return (
     <div className={styles.startQuizArea}>
       <div className={styles.topArea}>
-        <p style={{ fontSize: "1.4rem", fontWeight: 700 }}>01/04</p>
-        <p style={{ fontSize: "1.4rem", fontWeight: 700, color: "red" }}>
-          00:{quizQuestions[0].timer}s
+        <p style={{ fontSize: "1.4rem", fontWeight: 700 }}>
+          0{currQuestion + 1}/0{totalQuestionInQuiz + 1}
         </p>
+        {quizData?.timer > 0 && (
+          <p style={{ fontSize: "1.4rem", fontWeight: 700, color: "red" }}>
+            00:{time?.toString()?.padStart(2, "0")}s
+          </p>
+        )}
       </div>
 
-      <h3 className={styles.questionText}>{quizQuestions[1].question}</h3>
+      <h3 className={styles.questionText}>
+        {quizQuestions[currQuestion]?.question}
+      </h3>
 
       <div className={styles.options}>
-        {quizQuestions[1].options?.map((o, idx) => (
+        {quizQuestions[currQuestion]?.options?.map((o, idx) => (
           <div className={styles.optionBox} key={idx}>
             {quizData?.optionType === "text" && (
               <div style={{ padding: "1rem 4rem" }}>{o.text}</div>
@@ -146,7 +202,9 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions }) => {
       </div>
 
       <div className={styles.nextBtnDiv}>
-        <button className={styles.nextBtn}>NEXT</button>
+        <button className={styles.nextBtn} onClick={handleNextQuestion}>
+          {currQuestion === totalQuestionInQuiz ? "SUBMIT" : "NEXT"}
+        </button>
       </div>
     </div>
   );
