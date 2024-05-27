@@ -23,6 +23,22 @@ const Dashboard = () => {
     }
   }, []);
 
+  const [trendingQuizzes, setTrendingQuizzes] = useState([]);
+  useEffect(() => {
+    const fetchD = async () => {
+      try {
+        const res = await newRequest.get(`quiz/trending`);
+        setTrendingQuizzes(res?.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (currentUser) {
+      fetchD();
+    }
+  }, []);
+
   return (
     <div className={styles.dashboard}>
       <div className={styles.mainContent}>
@@ -53,24 +69,9 @@ const Dashboard = () => {
       </h6>
 
       <div className={styles.quizzesComp}>
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
-        <QuizzesComp />
+        {trendingQuizzes?.map((trendingQuiz) => (
+          <QuizzesComp key={trendingQuiz?._id} quizData={trendingQuiz} />
+        ))}
       </div>
     </div>
   );

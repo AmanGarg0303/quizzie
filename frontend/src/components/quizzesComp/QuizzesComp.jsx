@@ -1,13 +1,14 @@
 import React from "react";
 import styles from "./quizzesComp.module.css";
+import formatDate from "../../utils/formatDate";
 
-export const QuizzesComp = () => {
+export const QuizzesComp = ({ quizData }) => {
   return (
     <div className={styles.quizzesComp}>
       <div className={styles.content}>
-        <h4 className={styles.quizTitle}>Quiz Title</h4>
+        <h4 className={styles.quizTitle}>{quizData?.quizName}</h4>
         <p className={styles.totalQuizAndIcon}>
-          667{" "}
+          {quizData?.impressions}{" "}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -26,7 +27,9 @@ export const QuizzesComp = () => {
         </p>
       </div>
 
-      <p className={styles.date}>Created on: 14 Sep, 2024</p>
+      <p className={styles.date}>
+        Created on: {formatDate(quizData?.createdAt)}
+      </p>
     </div>
   );
 };
