@@ -96,16 +96,27 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions }) => {
   const [currQuestion, setCurrQuestion] = useState(0);
   const [time, setTime] = useState(quizData?.timer);
 
+  const [answers, setAnswers] = useState({
+    quizType: quizData?.quizType,
+    questions: [],
+  });
+
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  // Go to next question on btn click
   const handleNextQuestion = () => {
     if (currQuestion === totalQuestionInQuiz) {
       // TODO: submit the quiz and make changes in backend
-      // setShowComp(2);
+      console.log(answers);
+      console.log("next ques");
+      setShowComp(2);
       return;
     }
+
     setCurrQuestion(currQuestion + 1);
     setTime(quizData?.timer);
+    setSelectedOption(null);
   };
-  // console.log(currQuestion, totalQuestionInQuiz);
 
   // timer management
   useEffect(() => {
@@ -118,24 +129,48 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions }) => {
     return () => clearInterval(timerId);
   }, [time, currQuestion]);
 
-  // console.log(time);
-
   // going to next question automatically, when time ends
   useEffect(() => {
     const timerId = setTimeout(() => {
-      if (currQuestion === totalQuestionInQuiz) {
+      if (currQuestion === totalQuestionInQuiz && quizData?.quizType === "QA") {
         // TODO: submit the quiz and make changes in backend
-        // setShowComp(2);
+        console.log(answers);
+        console.log("next ques of useeffects");
+        setShowComp(2);
         return;
       }
+
       if (quizData?.timer > 0) {
         setCurrQuestion(currQuestion + 1);
       }
       setTime(quizData?.timer);
     }, quizData?.timer * 1000);
 
+    setSelectedOption(null);
+
     return () => clearInterval(timerId);
   }, [currQuestion, quizData?.timer]);
+
+  useEffect(() => {
+    const existingItem = answers?.questions?.findIndex(
+      (item) => item.questionId === quizQuestions[currQuestion]._id
+    );
+
+    if (selectedOption) {
+      if (existingItem !== -1) {
+        const newAnswers = { ...answers };
+        answers.questions[existingItem].chosenAnswer = selectedOption;
+        setAnswers(newAnswers);
+      } else {
+        const newAnswers = { ...answers };
+        newAnswers.questions.push({
+          questionId: quizQuestions[currQuestion]._id,
+          chosenAnswer: selectedOption,
+        });
+        setAnswers(newAnswers);
+      }
+    }
+  }, [selectedOption]);
 
   return (
     <div className={styles.startQuizArea}>
@@ -156,7 +191,14 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions }) => {
 
       <div className={styles.options}>
         {quizQuestions[currQuestion]?.options?.map((o, idx) => (
-          <div className={styles.optionBox} key={idx}>
+          <div
+            className={styles.optionBox}
+            key={idx}
+            onClick={() => setSelectedOption(idx + 1)}
+            style={{
+              border: idx + 1 === selectedOption && "3px solid blue",
+            }}
+          >
             {quizData?.optionType === "text" && (
               <div style={{ padding: "1rem 4rem" }}>{o.text}</div>
             )}
