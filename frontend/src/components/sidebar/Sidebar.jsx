@@ -40,17 +40,17 @@ export const Sidebar = () => {
             Dashboard
           </h5>
         </Link>
-
         <Link to={`/dashboard/analytics`} className={styles.link}>
           <h5
             className={`${styles.contentTitle} ${
-              pathname === "/dashboard/analytics" && styles.selected
+              (pathname === "/dashboard/analytics" ||
+                pathname.split("/")[3] === "questionWise") &&
+              styles.selected
             }`}
           >
             Analytics
           </h5>
         </Link>
-
         <h5
           className={styles.contentTitle}
           onClick={() => setOpenCreateQuizModal(true)}

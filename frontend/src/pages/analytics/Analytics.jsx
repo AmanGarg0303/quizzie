@@ -97,17 +97,6 @@ const Analytics = () => {
   const [openDeleteQuizModal, setOpenDeleteQuizModal] = useState(false);
   const [quId, setQuId] = useState("");
 
-  const handleDeleteQuiz = async (quizId) => {
-    try {
-      console.log({ quizId });
-      // const res = await newRequest.delete(`quiz/${quizId}`);
-      // toast.success(res?.data?.message);
-      setOpenDeleteQuizModal(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div className={styles.analytics}>
       <h2 className={styles.heading}>Quiz Analysis</h2>

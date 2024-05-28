@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./login.module.css";
-import { loginStart, loginSuccess, loginFailure } from "../../redux/userSlice";
+import { loginSuccess } from "../../redux/userSlice";
 import { useDispatch } from "react-redux";
 import newRequest from "../../utils/newRequest";
 import toast from "react-hot-toast";
@@ -55,7 +55,7 @@ export const Login = () => {
     }
   };
 
-  console.log(errorResponse);
+  // console.log(errorResponse);
 
   return (
     <div className={styles.container}>

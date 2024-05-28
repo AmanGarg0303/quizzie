@@ -69,9 +69,13 @@ const Dashboard = () => {
       </h6>
 
       <div className={styles.quizzesComp}>
-        {trendingQuizzes?.map((trendingQuiz) => (
-          <QuizzesComp key={trendingQuiz?._id} quizData={trendingQuiz} />
-        ))}
+        {trendingQuizzes?.length === 0 ? (
+          <div style={{ color: "#123456" }}>No trending quizzes!</div>
+        ) : (
+          trendingQuizzes?.map((trendingQuiz) => (
+            <QuizzesComp key={trendingQuiz?._id} quizData={trendingQuiz} />
+          ))
+        )}
       </div>
     </div>
   );

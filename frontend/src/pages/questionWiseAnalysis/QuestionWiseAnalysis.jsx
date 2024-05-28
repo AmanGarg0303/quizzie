@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./questionWiseAnalysis.module.css";
 import { useSelector } from "react-redux";
 import newRequest from "../../utils/newRequest";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import formatDate from "../../utils/formatDate";
 
 const QuestionWiseAnalysis = () => {
@@ -45,7 +45,7 @@ const QuestionWiseAnalysis = () => {
     }
   }, []);
 
-  console.log(allQuestionsData);
+  // console.log(allQuestionsData);
   //   console.log({ quizData });
 
   return (
