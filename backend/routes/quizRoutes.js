@@ -4,6 +4,7 @@ import {
   TrendingQuizzes,
   createQuiz,
   deleteQuiz,
+  playQuiz,
 } from "../controllers/quizController.js";
 import { protect } from "../middlewares/jwt.js";
 const router = express.Router();
@@ -17,10 +18,13 @@ router.delete("/:quizId", protect, deleteQuiz);
 // increase impression on quiz
 router.put("/:quizId", IncreaseImpressionOnQuiz);
 
-// increase impression on quiz
-router.put("/:quizId", IncreaseImpressionOnQuiz);
+// // increase impression on quiz
+// router.put("/:quizId", IncreaseImpressionOnQuiz);
 
 // increase impression on quiz
 router.get("/trending", protect, TrendingQuizzes);
+
+// increase impression on quiz
+router.patch("/playQuiz", playQuiz);
 
 export default router;

@@ -100,7 +100,9 @@ const QuestionWiseAnalysis = () => {
               <div className={styles.attemptsArea}>
                 {q?.options?.length >= 1 && (
                   <div className={styles.attempt}>
-                    <strong className={styles.answer}>{q.attempts}</strong>
+                    <strong className={styles.answer}>
+                      {q?.optedPollOption1}
+                    </strong>
                     <p>Option 1</p>
                   </div>
                 )}
@@ -108,7 +110,7 @@ const QuestionWiseAnalysis = () => {
                 {q?.options?.length >= 2 && (
                   <div className={styles.attempt}>
                     <strong className={styles.answer}>
-                      {q?.answedCorrectly}
+                      {q?.optedPollOption2}
                     </strong>
                     <p>Option 2</p>
                   </div>
@@ -117,7 +119,7 @@ const QuestionWiseAnalysis = () => {
                 {q?.options?.length >= 3 && (
                   <div className={styles.attempt}>
                     <strong className={styles.answer}>
-                      {q?.answerdIncorrectly}
+                      {q?.optedPollOption3}
                     </strong>
                     <p>Option 3</p>
                   </div>
@@ -126,7 +128,7 @@ const QuestionWiseAnalysis = () => {
                 {q?.options?.length >= 4 && (
                   <div className={styles.attempt}>
                     <strong className={styles.answer}>
-                      {q?.answerdIncorrectly}
+                      {q?.optedPollOption4}
                     </strong>
                     <p>Option 4</p>
                   </div>

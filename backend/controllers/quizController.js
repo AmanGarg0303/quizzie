@@ -131,6 +131,54 @@ export const TrendingQuizzes = async (req, res, next) => {
   }
 };
 
+export const playQuiz = async (req, res, next) => {
+  try {
+    const { quizType, questions } = req.body;
+
+    // when quizType is QA
+    if (quizType === "QA") {
+      Promise.all(
+        questions.map(async (q) => {
+          const ques = await Question.findById(q.questionId);
+
+          if (q.chosenAnswer === ques.correctAnswer) {
+            await ques.updateOne({ $inc: { answedCorrectly: 1 } });
+          } else {
+            await ques.updateOne({ $inc: { answerdIncorrectly: 1 } });
+          }
+
+          await ques.updateOne({ $inc: { attempts: 1 } });
+        })
+      );
+    }
+
+    // when quizType is POLL
+    if (quizType === "POLL") {
+      Promise.all(
+        questions.map(async (q) => {
+          const ques = await Question.findById(q.questionId);
+
+          if (q.chosenAnswer === 1) {
+            await ques.updateOne({ $inc: { optedPollOption1: 1 } });
+          } else if (q.chosenAnswer === 2) {
+            await ques.updateOne({ $inc: { optedPollOption2: 1 } });
+          } else if (q.chosenAnswer === 3) {
+            await ques.updateOne({ $inc: { optedPollOption3: 1 } });
+          } else if (q.chosenAnswer === 4) {
+            await ques.updateOne({ $inc: { optedPollOption4: 1 } });
+          }
+
+          // return ques._id;
+        })
+      );
+    }
+
+    res.status(200).json({ message: "Quiz played successfully!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 /*
 
 {
