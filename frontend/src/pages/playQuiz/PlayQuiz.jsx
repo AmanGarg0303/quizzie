@@ -7,6 +7,7 @@ import CongratulationsImg from "../../assets/congratulations.png";
 const PlayQuiz = () => {
   const { quizId } = useParams();
   const [quizData, setQuizData] = useState("");
+  const [userScore, setUserScore] = useState(0);
 
   // this fetches quiz data
   useEffect(() => {
@@ -53,9 +54,6 @@ const PlayQuiz = () => {
 
   const [showComp, setShowComp] = useState(0);
 
-  // console.log(quizData);
-  // console.log(quizQuestions);
-
   return (
     <div className={styles.container}>
       <div className={styles.miniContainer}>
@@ -76,14 +74,16 @@ const PlayQuiz = () => {
             setShowComp={setShowComp}
             quizData={quizData}
             quizQuestions={quizQuestions}
+            setUserScore={setUserScore}
           />
         )}
 
         {showComp === 2 && (
           <QuizCompleted
-            setShowComp={setShowComp}
+            // setShowComp={setShowComp}
             quizData={quizData}
             quizQuestions={quizQuestions}
+            userScore={userScore}
           />
         )}
       </div>
@@ -91,7 +91,7 @@ const PlayQuiz = () => {
   );
 };
 
-const StartQuiz = ({ setShowComp, quizData, quizQuestions }) => {
+const StartQuiz = ({ setShowComp, quizData, quizQuestions, setUserScore }) => {
   const totalQuestionInQuiz = quizQuestions?.length - 1;
   const [currQuestion, setCurrQuestion] = useState(0);
   const [time, setTime] = useState(quizData?.timer);
@@ -104,11 +104,18 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions }) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
   // Go to next question on btn click
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (currQuestion === totalQuestionInQuiz) {
+      try {
+        const res = await newRequest.patch(`quiz/playQuiz`, answers);
+        setUserScore(res?.data?.score);
+      } catch (error) {
+        console.log(error);
+      }
+
       // TODO: submit the quiz and make changes in backend
-      console.log(answers);
-      console.log("next ques");
+      // console.log(answers);
+      // console.log("next ques");
       setShowComp(2);
       return;
     }
@@ -131,11 +138,17 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions }) => {
 
   // going to next question automatically, when time ends
   useEffect(() => {
-    const timerId = setTimeout(() => {
+    const timerId = setTimeout(async () => {
       if (currQuestion === totalQuestionInQuiz && quizData?.quizType === "QA") {
         // TODO: submit the quiz and make changes in backend
-        console.log(answers);
-        console.log("next ques of useeffects");
+        try {
+          const res = await newRequest.patch(`quiz/playQuiz`, answers);
+          setUserScore(res?.data?.score);
+        } catch (error) {
+          console.log(error);
+        }
+        // console.log(answers);
+        // console.log("next ques of useeffects");
         setShowComp(2);
         return;
       }
@@ -253,7 +266,7 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions }) => {
   );
 };
 
-const QuizCompleted = ({ quizData }) => {
+const QuizCompleted = ({ quizData, quizQuestions, userScore }) => {
   return (
     <div className={styles.quizComplete}>
       {quizData.quizType === "QA" ? (
@@ -281,16 +294,20 @@ const QuizCompleted = ({ quizData }) => {
               textAlign: "center",
             }}
           >
-            Your Score is <span style={{ color: "green" }}>03/04</span>
+            Your Score is{" "}
+            <span style={{ color: "green" }}>
+              {userScore?.toString()?.padStart(2, "0")}/0{quizQuestions?.length}
+            </span>
           </p>
         </div>
       ) : (
         <p
           style={{
-            fontSize: "3.5rem",
+            fontSize: "3.2rem",
             textAlign: "center",
             fontWeight: 600,
             color: "#222222",
+            padding: "1rem",
           }}
         >
           Thank you <br /> for participating in <br /> the Poll

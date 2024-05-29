@@ -135,21 +135,27 @@ export const playQuiz = async (req, res, next) => {
   try {
     const { quizType, questions } = req.body;
 
+    let score = 0;
+
     // when quizType is QA
     if (quizType === "QA") {
-      Promise.all(
+      const qu = Promise.all(
         questions.map(async (q) => {
           const ques = await Question.findById(q.questionId);
 
           if (q.chosenAnswer === ques.correctAnswer) {
             await ques.updateOne({ $inc: { answedCorrectly: 1 } });
+            score += 1;
+            // console.log("score: ", score);
           } else {
             await ques.updateOne({ $inc: { answerdIncorrectly: 1 } });
           }
 
           await ques.updateOne({ $inc: { attempts: 1 } });
+          return score;
         })
       );
+      await qu;
     }
 
     // when quizType is POLL
@@ -173,7 +179,9 @@ export const playQuiz = async (req, res, next) => {
       );
     }
 
-    res.status(200).json({ message: "Quiz played successfully!" });
+    // console.log(score, userPoints);
+
+    res.status(200).json({ message: "Quiz played successfully!", score });
   } catch (error) {
     next(error);
   }
