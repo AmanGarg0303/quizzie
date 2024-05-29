@@ -94,20 +94,18 @@ const Slide = ({
 );
 
 const Form = ({
-  postData,
+  quizData,
   activeSlideIdx,
   handleQuestionChange,
   handleOptionTypeChange,
-  handleAnswerChange,
   handleSetOptionType,
   handleAddOption,
   optionType,
   handleChangeOptionContentText,
   handleChangeOptionContentImageUrl,
   handleDeleteOption,
-  handleTimeChange,
 }) => {
-  if (activeSlideIdx > postData?.slides?.length) {
+  if (activeSlideIdx > quizData?.slides?.length) {
     return null;
   }
 
@@ -121,7 +119,7 @@ const Form = ({
           onChange={(e) => {
             handleQuestionChange(activeSlideIdx, e.target.value);
           }}
-          value={postData.slides[activeSlideIdx - 1].question}
+          value={quizData.slides[activeSlideIdx - 1].question}
         />
       </div>
 
@@ -138,7 +136,7 @@ const Form = ({
               handleSetOptionType("text");
               handleOptionTypeChange(activeSlideIdx, "text");
             }}
-            checked={postData.slides[activeSlideIdx - 1].optionType === "text"}
+            checked={quizData.slides[activeSlideIdx - 1].optionType === "text"}
           />
           <label htmlFor="text">Text</label>
         </div>
@@ -153,7 +151,7 @@ const Form = ({
               handleSetOptionType("image");
               handleOptionTypeChange(activeSlideIdx, "image");
             }}
-            checked={postData.slides[activeSlideIdx - 1].optionType === "image"}
+            checked={quizData.slides[activeSlideIdx - 1].optionType === "image"}
           />
           <label htmlFor="image">Image</label>
         </div>
@@ -167,7 +165,7 @@ const Form = ({
               handleOptionTypeChange(activeSlideIdx, "textImage");
             }}
             checked={
-              postData.slides[activeSlideIdx - 1].optionType === "textImage"
+              quizData.slides[activeSlideIdx - 1].optionType === "textImage"
             }
           />
           <label htmlFor="textImage" style={{ whiteSpace: "nowrap" }}>
@@ -177,20 +175,8 @@ const Form = ({
       </div>
 
       <div className={styles.answersContent}>
-        {postData.slides[activeSlideIdx - 1].options.map((option, i) => (
+        {quizData.slides[activeSlideIdx - 1].options.map((option, i) => (
           <div className={styles.answers} key={i}>
-            {/* <input
-              style={{ width: "1rem" }}
-              type="radio"
-              name="answer"
-              id={i}
-              onChange={(e) => {
-                handleAnswerChange(activeSlideIdx, i + 1);
-              }}
-              checked={
-                postData.slides[activeSlideIdx - 1].correctAnswer === i + 1
-              }
-            /> */}
             <input
               style={{
                 marginLeft: "2rem",
@@ -201,7 +187,7 @@ const Form = ({
               onChange={(e) =>
                 handleChangeOptionContentText(activeSlideIdx, i, e.target.value)
               }
-              value={postData.slides[activeSlideIdx - 1].options[i].text}
+              value={quizData.slides[activeSlideIdx - 1].options[i].text}
             />
             {optionType === "textImage" && (
               <input
@@ -215,10 +201,10 @@ const Form = ({
                     e.target.value
                   )
                 }
-                value={postData.slides[activeSlideIdx - 1].options[i].imageUrl}
+                value={quizData.slides[activeSlideIdx - 1].options[i].imageUrl}
               />
             )}
-            {postData.slides[activeSlideIdx - 1].options.length > 2 && (
+            {quizData.slides[activeSlideIdx - 1].options.length > 2 && (
               <span onClick={() => handleDeleteOption(activeSlideIdx, i)}>
                 {deleteSVG}
               </span>
@@ -226,25 +212,7 @@ const Form = ({
           </div>
         ))}
 
-        {/* <div className={styles.answers}>
-          <input
-            style={{ width: "1rem" }}
-            type="radio"
-            name="answer"
-            id="answer1"
-            onChange={(e) => {
-              handleAnswerChange(activeSlideIdx, 1);
-            }}
-            checked={postData.slides[activeSlideIdx - 1].correctAnswer === 1}
-          />
-          <input
-            type="text"
-            placeholder="text"
-            className={styles.answerInput}
-          />
-        </div> */}
-
-        {postData.slides[activeSlideIdx - 1].options?.length < 4 && (
+        {quizData.slides[activeSlideIdx - 1].options?.length < 4 && (
           <div className={styles.answers}>
             <input
               style={{
@@ -270,14 +238,13 @@ export const Poll = ({
   setOpenCreateQuizModal,
   setShowComponent,
   quizName,
-  quizType,
   setQuizId,
 }) => {
   const [activeSlideIdx, setActiveSlideIdx] = useState(1);
   const [slideCount, setSlideCount] = useState(1);
   const [optionType, setOptionType] = useState("text");
 
-  const [postData, setPostData] = useState({
+  const [quizData, setQuizData] = useState({
     slides: [
       {
         question: "",
@@ -301,10 +268,10 @@ export const Poll = ({
   const handleAddSlide = () => {
     setSlideCount(slideCount + 1);
     setActiveSlideIdx(slideCount + 1);
-    const newPostData = { ...postData };
-    newPostData.slides.push({
+    const newQuizData = { ...quizData };
+    newQuizData.slides.push({
       question: "",
-      optionType: newPostData.slides[0].optionType,
+      optionType: newQuizData.slides[0].optionType,
       timer: 0,
       quizType: "POLL",
       options:
@@ -316,7 +283,7 @@ export const Poll = ({
           : [{ text: "" }, { text: "" }],
       correctAnswer: 1,
     });
-    setPostData(newPostData);
+    setQuizData(newQuizData);
     if (slideCount >= 1) {
       setShowError(false);
       setErrorMessage("");
@@ -324,29 +291,29 @@ export const Poll = ({
   };
 
   const handleAddOption = (activeSlideIdx) => {
-    const newPostData = { ...postData };
-    newPostData.slides[activeSlideIdx - 1].options.push(
+    const newQuizData = { ...quizData };
+    newQuizData.slides[activeSlideIdx - 1].options.push(
       optionType === "textImage" ? { text: "", imageUrl: "" } : { text: "" }
     );
-    setPostData({ ...newPostData });
+    setQuizData({ ...newQuizData });
   };
 
   const handleDeleteOption = (activeSlideIdx, optionIdx) => {
-    if (postData.slides[activeSlideIdx - 1]?.options?.length <= 1) {
+    if (quizData.slides[activeSlideIdx - 1]?.options?.length <= 1) {
       setShowError(true);
       setErrorMessage("You need to have at least 2 options");
       return;
     }
 
-    const newPostData = { ...postData };
-    newPostData.slides[activeSlideIdx - 1].options.splice(optionIdx, 1);
+    const newQuizData = { ...quizData };
+    newQuizData.slides[activeSlideIdx - 1].options.splice(optionIdx, 1);
     if (
-      newPostData.slides[activeSlideIdx - 1].correctAnswer >
-      newPostData.slides[activeSlideIdx - 1].options.length
+      newQuizData.slides[activeSlideIdx - 1].correctAnswer >
+      newQuizData.slides[activeSlideIdx - 1].options.length
     ) {
-      newPostData.slides[activeSlideIdx - 1].correctAnswer = 1;
+      newQuizData.slides[activeSlideIdx - 1].correctAnswer = 1;
     }
-    setPostData(newPostData);
+    setQuizData(newQuizData);
   };
 
   const handleSlideClick = (index) => {
@@ -354,27 +321,21 @@ export const Poll = ({
   };
 
   const handleQuestionChange = (index, value) => {
-    const newPostData = { ...postData };
-    newPostData.slides[index - 1].question = value;
-    setPostData(newPostData);
+    const newQuizData = { ...quizData };
+    newQuizData.slides[index - 1].question = value;
+    setQuizData(newQuizData);
   };
 
   const handleChangeOptionContentText = (slideIdx, idx, value) => {
-    const newPostData = { ...postData };
-    newPostData.slides[slideIdx - 1].options[idx].text = value;
-    setPostData(newPostData);
+    const newQuizData = { ...quizData };
+    newQuizData.slides[slideIdx - 1].options[idx].text = value;
+    setQuizData(newQuizData);
   };
 
   const handleChangeOptionContentImageUrl = (slideIdx, idx, value) => {
-    const newPostData = { ...postData };
-    newPostData.slides[slideIdx - 1].options[idx].imageUrl = value;
-    setPostData(newPostData);
-  };
-
-  const handleAnswerChange = (index, value) => {
-    const newPostData = { ...postData };
-    newPostData.slides[index - 1].correctAnswer = value;
-    setPostData(newPostData);
+    const newQuizData = { ...quizData };
+    newQuizData.slides[slideIdx - 1].options[idx].imageUrl = value;
+    setQuizData(newQuizData);
   };
 
   const handleSetOptionType = (val) => {
@@ -384,9 +345,9 @@ export const Poll = ({
   const handleOptionTypeChange = (index, value) => {
     setOptionType(value);
 
-    const newPostData = { ...postData };
+    const newQuizData = { ...quizData };
 
-    const modifiedPostData = newPostData.slides.reduce((acc, obj) => {
+    const modifiedPostData = newQuizData.slides.reduce((acc, obj) => {
       const modifiedObj = {
         ...obj,
         optionType: value,
@@ -402,23 +363,8 @@ export const Poll = ({
       return acc;
     }, []);
 
-    setPostData({ slides: modifiedPostData });
-    // setOptionType(() => newPostData.slides[0].optionType);
-  };
-
-  const handleTimeChange = (value) => {
-    const newPostData = { ...postData };
-
-    const modifiedPostData = newPostData.slides.reduce((acc, obj) => {
-      const modifiedObj = {
-        ...obj,
-        timer: value,
-      };
-      acc.push(modifiedObj);
-      return acc;
-    }, []);
-
-    setPostData({ slides: modifiedPostData });
+    setQuizData({ slides: modifiedPostData });
+    // setOptionType(() => newQuizData.slides[0].optionType);
   };
 
   const handleDeleteSlide = (index) => {
@@ -427,12 +373,12 @@ export const Poll = ({
       setErrorMessage("You need to have at least 1 question");
       return;
     }
-    if (index === postData.slides.length) {
+    if (index === quizData.slides.length) {
       setActiveSlideIdx(index - 1);
     }
 
-    const newPostData = { ...postData };
-    newPostData.slides.splice(index - 1, 1);
+    const newQuizData = { ...quizData };
+    newQuizData.slides.splice(index - 1, 1);
 
     if (index === activeSlideIdx) {
       setActiveSlideIdx(Math.max(index - 1, 1));
@@ -441,16 +387,16 @@ export const Poll = ({
     }
 
     setSlideCount(slideCount - 1);
-    setPostData(newPostData);
+    setQuizData(newQuizData);
   };
 
   // console.log("OptionType: " + optionType);
-  // console.log(postData);
+  // console.log(quizData);
 
   const [inProcess, setInProcess] = useState(false);
 
   const handleCreatePoll = async (e) => {
-    const error = postData.slides.some(
+    const error = quizData.slides.some(
       (slide) =>
         slide.correctAnswer === "" ||
         slide.optionType === "" ||
@@ -482,7 +428,7 @@ export const Poll = ({
         timer: 0,
         quizType: "POLL",
         optionType: optionType,
-        questions: postData.slides,
+        questions: quizData.slides,
       };
 
       // console.log(dataToSend);
@@ -501,7 +447,7 @@ export const Poll = ({
       setInProcess(false);
     }
 
-    // console.log(postData);
+    // console.log(quizData);
   };
 
   return (
@@ -522,18 +468,16 @@ export const Poll = ({
           handleDeleteSlide={handleDeleteSlide}
         />
         <Form
-          postData={postData}
+          quizData={quizData}
           activeSlideIdx={activeSlideIdx}
           handleQuestionChange={handleQuestionChange}
           handleOptionTypeChange={handleOptionTypeChange}
-          handleAnswerChange={handleAnswerChange}
           handleSetOptionType={handleSetOptionType}
           handleAddOption={handleAddOption}
           optionType={optionType}
           handleChangeOptionContentText={handleChangeOptionContentText}
           handleChangeOptionContentImageUrl={handleChangeOptionContentImageUrl}
           handleDeleteOption={handleDeleteOption}
-          handleTimeChange={handleTimeChange}
         />
       </div>
 

@@ -80,7 +80,6 @@ const PlayQuiz = () => {
 
         {showComp === 2 && (
           <QuizCompleted
-            // setShowComp={setShowComp}
             quizData={quizData}
             quizQuestions={quizQuestions}
             userScore={userScore}
@@ -113,9 +112,7 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions, setUserScore }) => {
         console.log(error);
       }
 
-      // TODO: submit the quiz and make changes in backend
       // console.log(answers);
-      // console.log("next ques");
       setShowComp(2);
       return;
     }
@@ -138,30 +135,33 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions, setUserScore }) => {
 
   // going to next question automatically, when time ends
   useEffect(() => {
-    const timerId = setTimeout(async () => {
-      if (currQuestion === totalQuestionInQuiz && quizData?.quizType === "QA") {
-        // TODO: submit the quiz and make changes in backend
-        try {
-          const res = await newRequest.patch(`quiz/playQuiz`, answers);
-          setUserScore(res?.data?.score);
-        } catch (error) {
-          console.log(error);
+    if (quizData?.timer > 0) {
+      const timerId = setTimeout(async () => {
+        if (
+          currQuestion === totalQuestionInQuiz &&
+          quizData?.quizType === "QA"
+        ) {
+          try {
+            const res = await newRequest.patch(`quiz/playQuiz`, answers);
+            setUserScore(res?.data?.score);
+          } catch (error) {
+            console.log(error);
+          }
+          // console.log(answers);
+          setShowComp(2);
+          return;
         }
-        // console.log(answers);
-        // console.log("next ques of useeffects");
-        setShowComp(2);
-        return;
-      }
 
-      if (quizData?.timer > 0) {
-        setCurrQuestion(currQuestion + 1);
-      }
-      setTime(quizData?.timer);
-    }, quizData?.timer * 1000);
+        if (quizData?.timer > 0) {
+          setCurrQuestion(currQuestion + 1);
+        }
+        setTime(quizData?.timer);
+      }, quizData?.timer * 1000);
 
-    setSelectedOption(null);
+      setSelectedOption(null);
 
-    return () => clearInterval(timerId);
+      return () => clearInterval(timerId);
+    }
   }, [currQuestion, quizData?.timer]);
 
   useEffect(() => {
