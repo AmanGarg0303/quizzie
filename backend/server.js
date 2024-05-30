@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://quizzie-six.vercel.app/"],
+    origin: ["https://quizzie-six.vercel.app/", "http://localhost:3000"],
     credentials: true,
   })
 );
