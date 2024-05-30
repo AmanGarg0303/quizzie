@@ -23,7 +23,7 @@ root.render(
         <MantineProvider theme={theme}>
           <App />
         </MantineProvider>
-        <Toaster />
+        <Toaster position="bottom-center" reverseOrder={false} />
       </ActiveAuthCompProvider>
     </PersistGate>
   </Provider>
