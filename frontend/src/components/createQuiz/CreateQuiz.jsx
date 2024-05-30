@@ -131,7 +131,9 @@ const Quiz1 = ({
 
 const QuizCreated = ({ quizType, quizId }) => {
   const shareQuiz = () => {
-    navigator.clipboard.writeText(`http://localhost:3000/playquiz/${quizId}`);
+    navigator.clipboard.writeText(
+      `https://quizzie-six.vercel.app/playquiz/${quizId}`
+    );
 
     toast.success("Link copied to clipboard");
   };
@@ -148,7 +150,7 @@ const QuizCreated = ({ quizType, quizId }) => {
         placeholder={`Your ${quizType === 0 ? "quiz" : "poll"} link is here`}
         className={styles.quizNameInput}
         readOnly
-        value={`http://localhost:3000/playQuiz/${quizId}`}
+        value={`https://quizzie-six.vercel.app/playQuiz/${quizId}`}
       />
 
       <div className={styles.shareBtnDiv}>

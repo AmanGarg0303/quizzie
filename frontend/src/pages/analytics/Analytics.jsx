@@ -131,7 +131,9 @@ const MyFunction = ({ analytic, i }) => {
   const [openDeleteQuizModal, setOpenDeleteQuizModal] = useState(false);
 
   const handleShareQuiz = (quizId) => {
-    navigator.clipboard.writeText(`http://localhost:3000/playquiz/${quizId}`);
+    navigator.clipboard.writeText(
+      `https://quizzie-six.vercel.app/playquiz/${quizId}`
+    );
 
     toast.success("Link copied to clipboard");
   };
