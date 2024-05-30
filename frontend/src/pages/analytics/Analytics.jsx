@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { DeleteQuizModal } from "../../components/deleteQuizModal/DeleteQuizModal";
 import { EditQA } from "../../components/editQA/EditQA";
 import { EditPoll } from "../../components/editPoll/EditPoll";
+import convertToK from "../../utils/convertToK";
 
 const EditSVG = (
   <svg
@@ -139,8 +140,8 @@ const MyFunction = ({ analytic, i }) => {
     <tr key={analytic._id}>
       <td>{i + 1}</td>
       <td>{analytic?.quizName}</td>
-      <td>{formatDate(analytic.createdAt)}</td>
-      <td>{analytic.impressions}</td>
+      <td>{formatDate(analytic?.createdAt)}</td>
+      <td>{convertToK(analytic?.impressions)}</td>
       <td className={styles.actions}>
         <span
           title="edit"

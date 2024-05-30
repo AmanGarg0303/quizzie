@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import newRequest from "../../utils/newRequest";
 import { useParams } from "react-router-dom";
 import formatDate from "../../utils/formatDate";
+import convertToK from "../../utils/convertToK";
 
 const QuestionWiseAnalysis = () => {
   const [allQuestionsData, setAllQuestionsData] = useState([]);
@@ -56,7 +57,7 @@ const QuestionWiseAnalysis = () => {
         </h1>
         <div style={{ fontSize: "14px", color: "red" }}>
           <p>Created on: {formatDate(quizData?.createdAt)}</p>
-          <p>Impressions: {quizData?.impressions}</p>
+          <p>Impressions: {convertToK(quizData?.impressions)}</p>
         </div>
       </div>
 

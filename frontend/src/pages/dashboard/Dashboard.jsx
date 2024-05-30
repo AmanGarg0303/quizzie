@@ -3,6 +3,7 @@ import styles from "./dashboard.module.css";
 import { QuizzesComp } from "../../components/quizzesComp/QuizzesComp";
 import newRequest from "../../utils/newRequest";
 import { useSelector } from "react-redux";
+import convertToK from "../../utils/convertToK";
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({});
@@ -58,7 +59,7 @@ const Dashboard = () => {
 
         <div className={styles.singleContent} style={{ color: "blue" }}>
           <p className={styles.heading}>
-            <span>{dashboardData.totalImpressions} </span> total
+            <span>{convertToK(dashboardData?.totalImpressions)} </span> total
           </p>
           <p className={styles.para}>impressions</p>
         </div>

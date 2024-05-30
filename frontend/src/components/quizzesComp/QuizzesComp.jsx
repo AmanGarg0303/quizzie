@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./quizzesComp.module.css";
 import formatDate from "../../utils/formatDate";
+import convertToK from "../../utils/convertToK";
 
 export const QuizzesComp = ({ quizData }) => {
   return (
@@ -8,7 +9,7 @@ export const QuizzesComp = ({ quizData }) => {
       <div className={styles.content}>
         <h4 className={styles.quizTitle}>{quizData?.quizName}</h4>
         <p className={styles.totalQuizAndIcon}>
-          {quizData?.impressions}{" "}
+          {convertToK(quizData?.impressions)}{" "}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
