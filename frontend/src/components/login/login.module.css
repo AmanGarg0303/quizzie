@@ -48,6 +48,9 @@
         cursor: pointer;
         filter: brightness(1.09);
       }
+      &:disabled {
+        cursor: not-allowed;
+      }
     }
   }
 }

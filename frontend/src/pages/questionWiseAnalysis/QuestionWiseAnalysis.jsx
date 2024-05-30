@@ -5,14 +5,15 @@ import newRequest from "../../utils/newRequest";
 import { useParams } from "react-router-dom";
 import formatDate from "../../utils/formatDate";
 import convertToK from "../../utils/convertToK";
+import { LoadingSVG } from "../../assets/LoadingSvg";
 
 const QuestionWiseAnalysis = () => {
   const [allQuestionsData, setAllQuestionsData] = useState([]);
   const [quizData, setQuizData] = useState({});
 
   const { currentUser } = useSelector((state) => state.user);
-
   const { quizId } = useParams();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchD = async () => {
@@ -32,12 +33,15 @@ const QuestionWiseAnalysis = () => {
   useEffect(() => {
     const fetchD = async () => {
       try {
+        setLoading(true);
         const res = await newRequest.get(
           `user/analytics/questionWise/${quizId}`
         );
         setAllQuestionsData(res?.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
     };
 
@@ -60,6 +64,12 @@ const QuestionWiseAnalysis = () => {
           <p>Impressions: {convertToK(quizData?.impressions)}</p>
         </div>
       </div>
+
+      {loading && (
+        <div style={{ textAlign: "center", marginTop: "2rem" }}>
+          {LoadingSVG}
+        </div>
+      )}
 
       {quizData?.quizType === "QA" ? (
         <div>

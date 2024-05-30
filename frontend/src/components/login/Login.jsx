@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import newRequest from "../../utils/newRequest";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { LoadingSVG } from "../../assets/LoadingSvg";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,6 +20,7 @@ export const Login = () => {
   });
 
   const [errorResponse, setErrorResponse] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -39,6 +41,7 @@ export const Login = () => {
 
     try {
       // dispatch(loginStart());
+      setLoading(true);
       const res = await newRequest.post("auth/login", {
         email,
         password,
@@ -48,9 +51,11 @@ export const Login = () => {
       dispatch(loginSuccess(res.data));
       toast.success("Logged in successfully!");
       navigate("/dashboard");
+      setLoading(false);
     } catch (error) {
       // console.log(error);
       setErrorResponse(error?.response?.data?.message);
+      setLoading(false);
       // dispatch(loginFailure());
     }
   };
@@ -99,8 +104,8 @@ export const Login = () => {
         </div>
 
         <div className={styles.loginBtnDiv}>
-          <button type="submit" className={styles.btn}>
-            Login
+          <button disabled={loading} type="submit" className={styles.btn}>
+            {loading ? <>{LoadingSVG}</> : "Login"}
           </button>
         </div>
       </form>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./register.module.css";
 import newRequest from "../../utils/newRequest";
 import toast from "react-hot-toast";
+import { LoadingSVG } from "../../assets/LoadingSvg";
 
 export const Register = ({ setActiveAuthComp }) => {
   const [username, setUsername] = useState("");
@@ -17,6 +18,7 @@ export const Register = ({ setActiveAuthComp }) => {
   });
 
   const [errorResponse, setErrorResponse] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const registerUser = async (e) => {
     e.preventDefault();
@@ -47,6 +49,7 @@ export const Register = ({ setActiveAuthComp }) => {
     }
 
     try {
+      setLoading(true);
       const res = await newRequest.post("auth/register", {
         username,
         email,
@@ -56,9 +59,11 @@ export const Register = ({ setActiveAuthComp }) => {
       // console.log(res.data);
       toast.success(res.data.message);
       setActiveAuthComp(1);
+      setLoading(false);
     } catch (error) {
       // console.log(error);
       setErrorResponse(error?.response?.data?.message);
+      setLoading(false);
     }
   };
 
@@ -144,8 +149,8 @@ export const Register = ({ setActiveAuthComp }) => {
         </div>
 
         <div className={styles.registerBtnDiv}>
-          <button type="submit" className={styles.btn}>
-            Sign-Up
+          <button disabled={loading} type="submit" className={styles.btn}>
+            {loading ? <>{LoadingSVG}</> : "Sign-Up"}
           </button>
         </div>
       </form>

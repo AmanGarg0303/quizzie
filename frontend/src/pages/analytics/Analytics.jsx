@@ -9,6 +9,7 @@ import { DeleteQuizModal } from "../../components/deleteQuizModal/DeleteQuizModa
 import { EditQA } from "../../components/editQA/EditQA";
 import { EditPoll } from "../../components/editPoll/EditPoll";
 import convertToK from "../../utils/convertToK";
+import { LoadingSVG } from "../../assets/LoadingSvg";
 
 const EditSVG = (
   <svg
@@ -76,13 +77,18 @@ const Analytics = () => {
 
   const { currentUser } = useSelector((state) => state.user);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchD = async () => {
       try {
+        setLoading(true);
         const res = await newRequest.get(`user/analytics`);
         setAnalyticsData(res.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
     };
 
@@ -114,10 +120,16 @@ const Analytics = () => {
             ))}
           </tbody>
         </table>
-        {analyticsData.length === 0 && (
+        {loading ? (
           <div style={{ textAlign: "center", marginTop: "2rem" }}>
-            No data to show!
+            {LoadingSVG}
           </div>
+        ) : (
+          analyticsData.length === 0 && (
+            <div style={{ textAlign: "center", marginTop: "2rem" }}>
+              No data to show!
+            </div>
+          )
         )}
       </div>
     </div>

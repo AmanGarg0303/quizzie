@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import newRequest from "../../utils/newRequest";
 import styles from "./playQuiz.module.css";
 import CongratulationsImg from "../../assets/congratulations.png";
+import { LoadingSVG } from "../../assets/LoadingSvg";
 
 const PlayQuiz = () => {
   const { quizId } = useParams();

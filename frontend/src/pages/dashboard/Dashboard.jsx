@@ -4,6 +4,7 @@ import { QuizzesComp } from "../../components/quizzesComp/QuizzesComp";
 import newRequest from "../../utils/newRequest";
 import { useSelector } from "react-redux";
 import convertToK from "../../utils/convertToK";
+import { LoadingSVG } from "../../assets/LoadingSvg";
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({});
@@ -24,14 +25,18 @@ const Dashboard = () => {
     }
   }, []);
 
+  const [loading, setLoading] = useState(false);
   const [trendingQuizzes, setTrendingQuizzes] = useState([]);
   useEffect(() => {
     const fetchD = async () => {
       try {
+        setLoading(true);
         const res = await newRequest.get(`quiz/trending`);
         setTrendingQuizzes(res?.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
     };
 
@@ -52,16 +57,16 @@ const Dashboard = () => {
 
         <div className={styles.singleContent} style={{ color: "green" }}>
           <p className={styles.heading}>
-            <span>{dashboardData?.totalQuestionCreatedByUser} </span>questions
+            <span>{dashboardData?.totalQuestionCreatedByUser} </span>Questions
           </p>
           <p className={styles.para}>Created</p>
         </div>
 
         <div className={styles.singleContent} style={{ color: "blue" }}>
           <p className={styles.heading}>
-            <span>{convertToK(dashboardData?.totalImpressions)} </span> total
+            <span>{convertToK(dashboardData?.totalImpressions)} </span> Total
           </p>
-          <p className={styles.para}>impressions</p>
+          <p className={styles.para}>Impressions</p>
         </div>
       </div>
 
@@ -70,7 +75,9 @@ const Dashboard = () => {
       </h6>
 
       <div className={styles.quizzesComp}>
-        {trendingQuizzes?.length === 0 ? (
+        {loading ? (
+          <div style={{ textAlign: "center" }}>{LoadingSVG}</div>
+        ) : trendingQuizzes?.length === 0 ? (
           <div style={{ color: "#123456" }}>No trending quizzes!</div>
         ) : (
           trendingQuizzes?.map((trendingQuiz) => (
