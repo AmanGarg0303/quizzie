@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { DeleteQuizModal } from "../../components/deleteQuizModal/DeleteQuizModal";
+import { EditQA } from "../../components/editQA/EditQA";
+import { EditPoll } from "../../components/editPoll/EditPoll";
 
 const EditSVG = (
   <svg
@@ -88,15 +90,6 @@ const Analytics = () => {
     }
   }, []);
 
-  const handleShareQuiz = (quizId) => {
-    navigator.clipboard.writeText(`http://localhost:3000/playquiz/${quizId}`);
-
-    toast.success("Link copied to clipboard");
-  };
-
-  const [openDeleteQuizModal, setOpenDeleteQuizModal] = useState(false);
-  const [quId, setQuId] = useState("");
-
   return (
     <div className={styles.analytics}>
       <h2 className={styles.heading}>Quiz Analysis</h2>
@@ -116,51 +109,7 @@ const Analytics = () => {
 
           <tbody>
             {analyticsData?.map((analytic, i) => (
-              <tr key={analytic._id}>
-                <td>{i + 1}</td>
-                <td>{analytic?.quizName}</td>
-                <td>{formatDate(analytic.createdAt)}</td>
-                <td>{analytic.impressions}</td>
-                <td className={styles.actions}>
-                  <span title="edit" className={styles.icon}>
-                    {EditSVG}
-                  </span>
-                  <span
-                    title="delete"
-                    className={styles.icon}
-                    onClick={() => {
-                      setOpenDeleteQuizModal(true);
-                      setQuId(analytic._id);
-                    }}
-                  >
-                    {deleteSVG}
-                  </span>
-
-                  <DeleteQuizModal
-                    openDeleteQuizModal={openDeleteQuizModal}
-                    setOpenDeleteQuizModal={setOpenDeleteQuizModal}
-                    quId={quId}
-                  />
-
-                  <span
-                    className={styles.icon}
-                    title="share"
-                    onClick={() => handleShareQuiz(analytic._id)}
-                  >
-                    {shareSVG}
-                  </span>
-                </td>
-                <td>
-                  <Link
-                    to={`/dashboard/analytics/questionWise/${analytic._id}`}
-                    className={styles.link}
-                  >
-                    <span className={styles.questionWise}>
-                      Question Wise Analysis
-                    </span>
-                  </Link>
-                </td>
-              </tr>
+              <MyFunction analytic={analytic} i={i} key={analytic._id} />
             ))}
           </tbody>
         </table>
@@ -175,3 +124,82 @@ const Analytics = () => {
 };
 
 export default Analytics;
+
+const MyFunction = ({ analytic, i }) => {
+  const [openEditQuizModal, setOpenEditQuizModal] = useState(false);
+  const [openDeleteQuizModal, setOpenDeleteQuizModal] = useState(false);
+
+  const handleShareQuiz = (quizId) => {
+    navigator.clipboard.writeText(`http://localhost:3000/playquiz/${quizId}`);
+
+    toast.success("Link copied to clipboard");
+  };
+
+  return (
+    <tr key={analytic._id}>
+      <td>{i + 1}</td>
+      <td>{analytic?.quizName}</td>
+      <td>{formatDate(analytic.createdAt)}</td>
+      <td>{analytic.impressions}</td>
+      <td className={styles.actions}>
+        <span
+          title="edit"
+          className={styles.icon}
+          onClick={() => {
+            setOpenEditQuizModal(true);
+          }}
+        >
+          {EditSVG}
+        </span>
+
+        {analytic.quizType === "QA" && (
+          <EditQA
+            openEditQuizModal={openEditQuizModal}
+            setOpenEditQuizModal={setOpenEditQuizModal}
+            quId={analytic._id}
+          />
+        )}
+
+        {analytic.quizType === "POLL" && (
+          <EditPoll
+            openEditQuizModal={openEditQuizModal}
+            setOpenEditQuizModal={setOpenEditQuizModal}
+            quId={analytic._id}
+          />
+        )}
+
+        <span
+          title="delete"
+          className={styles.icon}
+          onClick={() => {
+            setOpenDeleteQuizModal(true);
+          }}
+        >
+          {deleteSVG}
+        </span>
+
+        <DeleteQuizModal
+          openDeleteQuizModal={openDeleteQuizModal}
+          setOpenDeleteQuizModal={setOpenDeleteQuizModal}
+          quId={analytic._id}
+        />
+
+        <span
+          className={styles.icon}
+          title="share"
+          onClick={() => handleShareQuiz(analytic._id)}
+        >
+          {shareSVG}
+        </span>
+      </td>
+      <td>
+        <Link
+          to={`/dashboard/analytics/questionWise/${analytic._id}`}
+          className={styles.link}
+        >
+          <span className={styles.questionWise}>Question Wise Analysis</span>
+        </Link>
+      </td>
+    </tr>
+  );
+};
