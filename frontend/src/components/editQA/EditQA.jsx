@@ -388,12 +388,13 @@ export const EditQA = ({ openEditQuizModal, setOpenEditQuizModal, quId }) => {
   const [activeSlideIdx, setActiveSlideIdx] = useState(1);
   const [slideCount, setSlideCount] = useState(allQuestionsData?.length);
 
+  const [optionType, setOptionType] = useState("text");
+
   useEffect(() => {
     setSlideCount(allQuestionsData?.length);
+    setOptionType(allQuizData?.optionType);
     setQuizData({ slides: allQuestionsData });
   }, [allQuestionsData, allQuizData]);
-
-  const [optionType, setOptionType] = useState("text");
 
   //   console.log(allQuestionsData);
 
