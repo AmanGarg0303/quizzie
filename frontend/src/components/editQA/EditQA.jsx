@@ -133,7 +133,7 @@ const Form = ({
             type="radio"
             name="optionType"
             id="text"
-            style={{ width: "1rem" }}
+            style={{ width: "1rem", accentColor: "green" }}
             onChange={(e) => {
               handleSetOptionType("text");
               handleOptionTypeChange(activeSlideIdx, "text");
@@ -145,7 +145,7 @@ const Form = ({
 
         <div className={styles.optionTypeContent}>
           <input
-            style={{ width: "1rem" }}
+            style={{ width: "1rem", accentColor: "green" }}
             type="radio"
             name="optionType"
             id="image"
@@ -161,6 +161,7 @@ const Form = ({
           <input
             type="radio"
             name="optionType"
+            style={{ accentColor: "green" }}
             id="textImage"
             onChange={(e) => {
               handleSetOptionType("textImage");
@@ -180,7 +181,7 @@ const Form = ({
         {quizData.slides[activeSlideIdx - 1].options.map((option, i) => (
           <div className={styles.answers} key={i}>
             <input
-              style={{ width: "1rem" }}
+              style={{ width: "1rem", accentColor: "green" }}
               type="radio"
               name="answer"
               id={i}
