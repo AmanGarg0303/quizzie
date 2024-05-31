@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import newRequest from "../../utils/newRequest";
 import styles from "./playQuiz.module.css";
@@ -102,9 +102,11 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions, setUserScore }) => {
   });
 
   const [selectedOption, setSelectedOption] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Go to next question on btn click
   const handleNextQuestion = async () => {
+    setIsLoading(true);
     if (currQuestion === totalQuestionInQuiz) {
       try {
         const res = await newRequest.patch(`quiz/playQuiz`, answers);
@@ -117,7 +119,7 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions, setUserScore }) => {
       setShowComp(2);
       return;
     }
-
+    setIsLoading(false);
     setCurrQuestion(currQuestion + 1);
     setTime(quizData?.timer);
     setSelectedOption(null);
@@ -259,7 +261,11 @@ const StartQuiz = ({ setShowComp, quizData, quizQuestions, setUserScore }) => {
       </div>
 
       <div className={styles.nextBtnDiv}>
-        <button className={styles.nextBtn} onClick={handleNextQuestion}>
+        <button
+          className={styles.nextBtn}
+          onClick={handleNextQuestion}
+          disabled={isLoading}
+        >
           {currQuestion === totalQuestionInQuiz ? "SUBMIT" : "NEXT"}
         </button>
       </div>
