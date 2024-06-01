@@ -77,19 +77,19 @@ function App() {
     },
     {
       path: "/dashboard",
-      element: <DashboardLayout />,
+      element: currentUser ? <DashboardLayout /> : <HomeLayout />,
       children: [
         {
           path: "/dashboard/",
-          element: <Dashboard />,
+          element: currentUser ? <Dashboard /> : <Home />,
         },
         {
           path: "/dashboard/analytics",
-          element: <Analytics />,
+          element: currentUser ? <Analytics /> : <Home />,
         },
         {
           path: "/dashboard/analytics/questionwise/:quizId",
-          element: <QuestionWiseAnalysis />,
+          element: currentUser ? <QuestionWiseAnalysis /> : <Home />,
         },
       ],
     },
